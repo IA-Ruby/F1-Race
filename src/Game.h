@@ -4,15 +4,15 @@
 #include <SFML/OpenGL.hpp>
 
 class Game{
-    //Variables 
-    //Window
-    sf::Window* window;
-    sf::VideoMode videomode;
-    sf::ContextSettings contextSettings;
-    sf::Event ev;
-    sf::Clock clock;
+    private: 
+        //Variables 
+        //Window
+        sf::Window* window;
+        sf::VideoMode videomode;
+        sf::ContextSettings contextSettings;
+        sf::Event ev;
 
-    private: //Private functions
+        //Private functions
         void initVariables();
         void initWindow();
 
@@ -20,7 +20,6 @@ class Game{
         
         //Constructors and Destructors
         Game(); 
-        virtual ~Game();
 
         //Accessors
         const bool running() const; 

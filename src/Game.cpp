@@ -18,9 +18,6 @@ Game::Game(){
     this->initWindow();
 }
 
-Game::~Game(){
-    delete this->window; 
-}
 
 //Accessors
 const bool Game::running() const{
