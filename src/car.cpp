@@ -237,111 +237,61 @@ void Car::drawMode(int mode, GLubyte color[3], bool show){
                                 glVertex3f( -maxX,  maxY, midZ);
                                 glVertex3f( -maxX,  maxY, lowZ);    glEnd();
 
-            //Direita
-            if(mode == GL_FILL || show){               
-                glBegin(GL_QUAD_STRIP);
-                    glVertex3f(maxX, medY, lowZ);
-                    glVertex3f(maxX, maxY, lowZ);
-                    for(float angulo = 0; angulo <= 180; angulo += 20){
-                        float y = cos(angulo*M_PI/180.0) * 6 + (medY + midY)/2;
-                        float z = sin(angulo*M_PI/180.0) * 6 ;
-                        if(angulo == 60){
-                            glVertex3f(maxX,    y, z);
-                            glVertex3f(maxX, maxY, midZ);
-                        }else if(angulo == 80){
-                            glVertex3f(maxX,    y, z);
-                            glVertex3f(maxX, medY, medZ);
-                        }else if(angulo == 100){
-                            glVertex3f(maxX,    y, z);
-                            glVertex3f(maxX, 0, medZ);
-                        }else if(angulo < 60){
-                            glVertex3f(maxX,    y, z);
-                            glVertex3f(maxX, maxY, z);
-                        }else{
-                            glVertex3f(maxX, y, z);
-                            glVertex3f(maxX, 0,    z);
+            //Direita e Esquerda
+            if(mode == GL_FILL || show){
+                for(int i = -1; i<= 1; i+=2){
+                    glBegin(GL_QUAD_STRIP);
+                        glVertex3f(maxX*i, medY, lowZ);
+                        glVertex3f(maxX*i, maxY, lowZ);
+                        for(float angulo = 0; angulo <= 180; angulo += 20){
+                            float y = cos(angulo*M_PI/180.0) * 6 + (medY + midY)/2;
+                            float z = sin(angulo*M_PI/180.0) * 6 ;
+                            if(angulo == 60){
+                                glVertex3f(maxX*i,    y, z);
+                                glVertex3f(maxX*i, maxY, midZ);
+                            }else if(angulo == 80){
+                                glVertex3f(maxX*i,    y, z);
+                                glVertex3f(maxX*i, medY, medZ);
+                            }else if(angulo == 100){
+                                glVertex3f(maxX*i,    y, z);
+                                glVertex3f(maxX*i, 0, medZ);
+                            }else if(angulo < 60){
+                                glVertex3f(maxX*i,    y, z);
+                                glVertex3f(maxX*i, maxY, z);
+                            }else{
+                                glVertex3f(maxX*i, y, z);
+                                glVertex3f(maxX*i, 0,    z);
+                            }
                         }
-                    }
-                    glVertex3f(maxX, midY, lowZ);
-                    glVertex3f(maxX, 0,    lowZ);
-                glEnd();
-                
-                glBegin(GL_QUAD_STRIP);
-                    glVertex3f(maxX, -medY, lowZ);
-                    glVertex3f(maxX, lowY, lowZ);
-                    for(float angulo = 0; angulo <= 180; angulo += 20){
-                        float y = cos(angulo*M_PI/180.0) * 6 + (medY + midY)/2;
-                        float z = sin(angulo*M_PI/180.0) * 6 ;
-                        if(angulo == 80){
-                            glVertex3f(maxX,    -y, z);
-                            glVertex3f(maxX, lowY, medZ);
-                        }else if(angulo == 100){
-                            glVertex3f(maxX,    -y, z);
-                            glVertex3f(maxX, 0, medZ);
-                        }else if(angulo < 80){
-                            glVertex3f(maxX,    -y, z);
-                            glVertex3f(maxX, lowY, z);
-                        }else{
-                            glVertex3f(maxX, -y, z);
-                            glVertex3f(maxX, 0,    z);
+                        glVertex3f(maxX*i, midY, lowZ);
+                        glVertex3f(maxX*i, 0,    lowZ);
+                    glEnd();
+                    
+                    glBegin(GL_QUAD_STRIP);
+                        glVertex3f(maxX*i, -medY, lowZ);
+                        glVertex3f(maxX*i, lowY, lowZ);
+                        for(float angulo = 0; angulo <= 180; angulo += 20){
+                            float y = cos(angulo*M_PI/180.0) * 6 + (medY + midY)/2;
+                            float z = sin(angulo*M_PI/180.0) * 6 ;
+                            if(angulo == 80){
+                                glVertex3f(maxX*i,    -y, z);
+                                glVertex3f(maxX*i, lowY, medZ);
+                            }else if(angulo == 100){
+                                glVertex3f(maxX*i,    -y, z);
+                                glVertex3f(maxX*i, 0, medZ);
+                            }else if(angulo < 80){
+                                glVertex3f(maxX*i,    -y, z);
+                                glVertex3f(maxX*i, lowY, z);
+                            }else{
+                                glVertex3f(maxX*i, -y, z);
+                                glVertex3f(maxX*i, 0,    z);
+                            }
                         }
-                    }
-                    glVertex3f(maxX, -midY, lowZ);
-                    glVertex3f(maxX, 0,    lowZ);
-                glEnd();
-                
-                //Esquerda
-                glBegin(GL_QUAD_STRIP);
-                    glVertex3f(-maxX, medY, lowZ);
-                    glVertex3f(-maxX, maxY, lowZ);
-                    for(float angulo = 0; angulo <= 180; angulo += 20){
-                        float y = cos(angulo*M_PI/180.0) * 6 + (medY + midY)/2;
-                        float z = sin(angulo*M_PI/180.0) * 6 ;
-                        if(angulo == 60){
-                            glVertex3f(-maxX,    y, z);
-                            glVertex3f(-maxX, maxY, midZ);
-                        }else if(angulo == 80){
-                            glVertex3f(-maxX,    y, z);
-                            glVertex3f(-maxX, medY, medZ);
-                        }else if(angulo == 100){
-                            glVertex3f(-maxX,    y, z);
-                            glVertex3f(-maxX, 0, medZ);
-                        }else if(angulo < 60){
-                            glVertex3f(-maxX,    y, z);
-                            glVertex3f(-maxX, maxY, z);
-                        }else{
-                            glVertex3f(-maxX, y, z);
-                            glVertex3f(-maxX, 0,    z);
-                        }
-                    }
-                    glVertex3f(-maxX, midY, lowZ);
-                    glVertex3f(-maxX, 0,    lowZ);
-                glEnd();
-                
-                glBegin(GL_QUAD_STRIP);
-                    glVertex3f(-maxX, -medY, lowZ);
-                    glVertex3f(-maxX, lowY, lowZ);
-                    for(float angulo = 0; angulo <= 180; angulo += 20){
-                        float y = cos(angulo*M_PI/180.0) * 6 + (medY + midY)/2;
-                        float z = sin(angulo*M_PI/180.0) * 6 ;
-                        if(angulo == 80){
-                            glVertex3f(-maxX,    -y, z);
-                            glVertex3f(-maxX, lowY, medZ);
-                        }else if(angulo == 100){
-                            glVertex3f(-maxX,    -y, z);
-                            glVertex3f(-maxX, 0, medZ);
-                        }else if(angulo < 80){
-                            glVertex3f(-maxX,    -y, z);
-                            glVertex3f(-maxX, lowY, z);
-                        }else{
-                            glVertex3f(-maxX, -y, z);
-                            glVertex3f(-maxX, 0,    z);
-                        }
-                    }
-                    glVertex3f(-maxX, -midY, lowZ);
-                    glVertex3f(-maxX, 0,    lowZ);
-                glEnd();
+                        glVertex3f(maxX*i, -midY, lowZ);
+                        glVertex3f(maxX*i, 0,    lowZ);
+                    glEnd();
             }
+        }
             
         //   Meio
             //Traseira
@@ -384,47 +334,28 @@ void Car::drawMode(int mode, GLubyte color[3], bool show){
                                 glVertex3f( -medX, -midY, maxZ);    glEnd();    
         
         // Tail
-            glBegin(GL_QUADS);  glVertex3f(  tailMaxX,  tailMidY, medZ);
-                                glVertex3f(  tailMaxX,  tailLowY, tailMidZ);
-                                glVertex3f(  tailLowX,  tailLowY, tailMidZ);
-                                glVertex3f(  tailLowX,  tailMidY, medZ); glEnd();
+            for(int i = -1; i<=1; i+=2){
+                glBegin(GL_QUADS);  glVertex3f( tailMaxX*i,  tailMidY, medZ);
+                                    glVertex3f( tailMaxX*i,  tailLowY, tailMidZ);
+                                    glVertex3f( tailLowX*i,  tailLowY, tailMidZ);
+                                    glVertex3f( tailLowX*i,  tailMidY, medZ); glEnd();
 
-            glBegin(GL_QUADS);  glVertex3f(  tailMaxX,  tailMaxY, medZ);
-                                glVertex3f(  tailMaxX,  tailMidY, tailMidZ);
-                                glVertex3f(  tailLowX,  tailMidY, tailMidZ);
-                                glVertex3f(  tailLowX,  tailMaxY, medZ); glEnd();
+                glBegin(GL_QUADS);  glVertex3f( tailMaxX*i,  tailMaxY, medZ);
+                                    glVertex3f( tailMaxX*i,  tailMidY, tailMidZ);
+                                    glVertex3f( tailLowX*i,  tailMidY, tailMidZ);
+                                    glVertex3f( tailLowX*i,  tailMaxY, medZ); glEnd();
 
-            glBegin(GL_QUADS);  glVertex3f(  tailMaxX,  tailMidY, medZ);
-                                glVertex3f(  tailMaxX,  tailMaxY, medZ);
-                                glVertex3f(  tailMaxX,  tailMidY, tailMidZ);
-                                glVertex3f(  tailMaxX,  tailLowY, tailMidZ); glEnd();
+                glBegin(GL_QUADS);  glVertex3f( tailMaxX*i,  tailMidY, medZ);
+                                    glVertex3f( tailMaxX*i,  tailMaxY, medZ);
+                                    glVertex3f( tailMaxX*i,  tailMidY, tailMidZ);
+                                    glVertex3f( tailMaxX*i,  tailLowY, tailMidZ); glEnd();
 
-            glBegin(GL_QUADS);  glVertex3f(  tailLowX,  tailMidY, medZ);
-                                glVertex3f(  tailLowX,  tailMaxY, medZ);
-                                glVertex3f(  tailLowX,  tailMidY, tailMidZ);
-                                glVertex3f(  tailLowX,  tailLowY, tailMidZ); glEnd();
-            
-            glBegin(GL_QUADS);  glVertex3f( -tailMaxX,  tailMidY, medZ);
-                                glVertex3f( -tailMaxX,  tailLowY, tailMidZ);
-                                glVertex3f( -tailLowX,  tailLowY, tailMidZ);
-                                glVertex3f( -tailLowX,  tailMidY, medZ); glEnd();
+                glBegin(GL_QUADS);  glVertex3f( tailLowX*i,  tailMidY, medZ);
+                                    glVertex3f( tailLowX*i,  tailMaxY, medZ);
+                                    glVertex3f( tailLowX*i,  tailMidY, tailMidZ);
+                                    glVertex3f( tailLowX*i,  tailLowY, tailMidZ); glEnd();
+            }
 
-            glBegin(GL_QUADS);  glVertex3f( -tailMaxX,  tailMaxY, medZ);
-                                glVertex3f( -tailMaxX,  tailMidY, tailMidZ);
-                                glVertex3f( -tailLowX,  tailMidY, tailMidZ);
-                                glVertex3f( -tailLowX,  tailMaxY, medZ); glEnd();
-
-            glBegin(GL_QUADS);  glVertex3f( -tailMaxX,  tailMidY, medZ);
-                                glVertex3f( -tailMaxX,  tailMaxY, medZ);
-                                glVertex3f( -tailMaxX,  tailMidY, tailMidZ);
-                                glVertex3f( -tailMaxX,  tailLowY, tailMidZ); glEnd();
-
-            glBegin(GL_QUADS);  glVertex3f( -tailLowX,  tailMidY, medZ);
-                                glVertex3f( -tailLowX,  tailMaxY, medZ);
-                                glVertex3f( -tailLowX,  tailMidY, tailMidZ);
-                                glVertex3f( -tailLowX,  tailLowY, tailMidZ); glEnd();
-            
-            //  
             glBegin(GL_QUADS);  glVertex3f(  maxX,     tailMidY, tailMaxZ);
                                 glVertex3f(  maxX,  tailTopMaxY, tailMaxZ);
                                 glVertex3f( -maxX,  tailTopMaxY, tailMaxZ);
