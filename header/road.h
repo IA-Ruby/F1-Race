@@ -20,7 +20,7 @@ class Road{
         Road(   GLubyte colorRoad[3],
                 GLubyte colorBG[3], 
                 glm::vec3 roadPos);
-        void draw(float speed, bool show);
+        void draw(float speed, int texId);
 };
 
 #endif

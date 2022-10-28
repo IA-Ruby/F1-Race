@@ -7,7 +7,7 @@
     #define M_PI 3.14159265358979323846
 #endif
 
-Horizon::Horizon(GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorStars[3], GLubyte colorBG[3], glm::vec3 sunPos, float scale){
+Horizon::Horizon(GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorStars[3], GLubyte colorBG[3], glm::vec3 sunPos, float scale, bool lines, bool city){
     for(int i=0; i<3; i++){
         this->colorSun[i] = colorSun[i];
         this->colorLight[i] = colorLight[i];
@@ -16,7 +16,8 @@ Horizon::Horizon(GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorStars[
     }
     this->scale = scale;
     this->sunPos = sunPos;
-    
+    this->lines = lines;
+    this->city = city;
     for(float i=-1; i<1.1; i+=0.1){
         for(float j=-4; j<=4; j+=0.1){
             if(rand()%10 == 1){
@@ -32,10 +33,14 @@ void Horizon::draw(glm::vec3 camPos){
     this->sunPos.x = camPos.x;
     drawStars();
     drawSun();
-    drawSunLines();
-    drawGlow();
-    drawCity();
-    drawGlowCity();
+    drawSunGlow();
+    if(lines)
+        drawSunLines();
+    if(city){
+        drawSunFrontGlow();
+        drawCity();
+        drawGlowCity();
+    }
 }
 
 void Horizon::drawStars(){
@@ -80,7 +85,7 @@ void Horizon::drawSun(){
 
 void Horizon::drawSunLines(){
     glPushMatrix();
-         glTranslatef(sunPos.x, sunPos.y-10, sunPos.z);
+        glTranslatef(sunPos.x, sunPos.y-10, sunPos.z);
         glRotatef(rotCam,1,0,0); //Rotaciona para ficar alinhado com a câmera
         glScalef(scale,scale,1);    
         glColor3ubv(colorLight);
@@ -88,10 +93,10 @@ void Horizon::drawSunLines(){
         // Coloquei os valor tudo na mão mesmo porque tava com dificuldade de pensar em como fazer isso usando 
         // as função de circulo... 
 
-        glBegin(GL_QUADS);  glVertex3f( 1, -0.05, 0);   // 1
-                            glVertex3f( 1,     0, 0);
-                            glVertex3f(-1,     0, 0);
-                            glVertex3f(-1, -0.05, 0);   glEnd(); 
+        glBegin(GL_QUADS);  glVertex3f(    1, -0.05, 0);   // 1
+                            glVertex3f(    1,     0, 0);
+                            glVertex3f(   -1,     0, 0);
+                            glVertex3f(   -1, -0.05, 0);   glEnd(); 
 
         glBegin(GL_QUADS);  glVertex3f( 0.99, -0.15, 0);    // 2
                             glVertex3f(    1, -0.10, 0);
@@ -140,7 +145,7 @@ void Horizon::drawSunLines(){
     glPopMatrix();
 }
 
-void Horizon::drawGlow(){
+void Horizon::drawSunGlow(){
     //Brilho de fundo atrás do Sol
     glPushMatrix();
         glTranslatef(sunPos.x, sunPos.y+10, sunPos.z);
@@ -157,7 +162,9 @@ void Horizon::drawGlow(){
             }
         glEnd();
     glPopMatrix();
+}
 
+void Horizon::drawSunFrontGlow(){
     //Brilho de fundo na frente do Sol
     glPushMatrix();
         glTranslatef(0, sunPos.y-100, 0);
@@ -321,5 +328,5 @@ void Horizon::drawGlowCity(){
                                 glColor4f(0,0,0,0);
                                     glVertex3f(  2, 0.4, 0);
                                     glVertex3f( -2, 0.4, 0);     glEnd();
-        glPopMatrix();
+    glPopMatrix();
 }

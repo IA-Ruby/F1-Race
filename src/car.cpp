@@ -40,52 +40,31 @@ Car::Car(GLubyte colorCar[3], glm::vec3 pos, float speed){
     }
 }
 
-void Car::draw(bool show){
+void Car::draw(int texId){
     glLineWidth(4.0f);
-    drawMode(GL_LINE, colorOutline, show);
+    drawMode(GL_LINE, colorOutline);
     glLineWidth(1.0f);
-    drawMode(GL_FILL, colorCar, show);
+    drawMode(GL_FILL, colorCar);
 }
 
-void Car::drawMode(int mode, GLubyte color[3], bool show){
+void Car::drawMode(int mode, GLubyte color[3]){
     glPolygonMode(GL_FRONT_AND_BACK, mode);
     glPushMatrix();
         glTranslatef(carPos.x,carPos.y,carPos.z);
         glRotatef(rot,0,0,1); 
         glTranslatef(-carPos.x,-carPos.y,-carPos.z);    // Volta pra origem
 
-        // Algumas variaveis pra me ajudar no mapeamento do carro
-
-        float outX = 14.6;
-        float maxX = 13.25;     // Valor maximo de X, ou largura maxima
-        float midX = 5;         // Valor do meio doo X, importante para tampar o buraco das rodas
-        float medX = 10;
-
-        float maxY = 35;        // Valor maximo de Y, ou o ponto extremo da frente do carro
-        float lowY = -30;       // Valor minimo de Y, ou o ponto extremo da traseira do carro
-        float medY = 21;        // Valor entre o o meio de Y e o valor maximo de Y;
-        float midY = 9;         // Valor do meio de Y,
-
-        float mid2Y = 8;
-        float med2Y = 20;
+        // Algumas variaveis pra ajudar no mapeamento do carro
         
-        float maxZ = 15;
-        float lowZ = -1.5;      // Valor mais baixo de Z, ou seja, o fundo do carro, não considerando as rodas;
-        float dwnZ = 0;         // Valor vaixo de Z, relativo as luzes e a alguns buracos
-        float midZ = 6;         // Valor do meio de Z
-        float medZ = 9;         // Base dos vidros
+        float   // Eixo X
+                outX = 14.6, maxX = 13.25, midX = 5, medX = 10, tMaxX = 10, tMinX = 9.5,
 
-        float tailMaxY = -28;
-        float tailMidY = -29;
-        float tailLowY = -30;
-        float tailTopLowY = -31;
-        float tailTopMaxY = -32;
+                // Eixo Y
+                maxY = 35, lowY = -30, medY = 21, midY = 9, mid2Y = 8, med2Y = 20, 
+                tMaxY = -28, tMedY = -29, tMidY = -30, tLowY = -31, tMinY = -32,
 
-        float tailMaxX = 10;
-        float tailLowX = 9.5;
-
-        float tailMaxZ = 14;
-        float tailMidZ = 13;
+                // Eixo Z
+                maxZ = 15, lowZ = -1.5, dwnZ = 0,midZ = 6, medZ = 9, tMaxZ = 14, tMinZ = 13;
 
         // Atualização da variavel de rotação
         auxRot = auxRot + (0.25*speed);
@@ -96,6 +75,7 @@ void Car::drawMode(int mode, GLubyte color[3], bool show){
             for(int j=-1; j<=1; j+=2){
                 glPushMatrix();
                     glTranslatef(carPos.x+(i*10),carPos.y+(j*15),carPos.z);
+                    glColor3ubv(color);
                     if(i<0){
                         glRotatef(-90.f,0,1,0);
                         glRotatef(auxRot,0,0,1);
@@ -103,14 +83,14 @@ void Car::drawMode(int mode, GLubyte color[3], bool show){
                         glRotatef(90.f,0,1,0);
                         glRotatef(-auxRot,0,0,1);
                     }
-                    drawWheel(5.f,2.5f,color);
+                    drawWheel(5.f,2.5f);
                 glPopMatrix();
-                glColor3ubv(color);
             }
         }
-
+        
+        glColor3ubv(color);
         //Buracos das Rodas
-        if(mode == GL_FILL || show){
+        if(mode == GL_FILL){
             for(int i=-1; i<=1; i+=2){    
                 for(int j=-1; j<=1; j+=2){
                     glPushMatrix();
@@ -186,7 +166,7 @@ void Car::drawMode(int mode, GLubyte color[3], bool show){
             for(int i = -1; i <= 1; i+=2){
                 for(int j = -1; j <= 1; j+=2){
                     // Preencher os buracos
-                    if(mode == GL_FILL || show){
+                    if(mode == GL_FILL){
                         glBegin(GL_QUADS);  glVertex3f(  midX*i,  midY*j, dwnZ);     
                                             glVertex3f(  midX*i,  midY*j, lowZ);
                                             glVertex3f(  outX*i,  midY*j, lowZ);
@@ -226,19 +206,23 @@ void Car::drawMode(int mode, GLubyte color[3], bool show){
             
         //  Laterais
             //  Tras
-            glBegin(GL_QUADS);  glVertex3f(  maxX,  lowY, lowZ);
-                                glVertex3f(  maxX,  lowY, medZ);
-                                glVertex3f( -maxX,  lowY, medZ);
-                                glVertex3f( -maxX,  lowY, lowZ);    glEnd();
+            glBegin(GL_QUADS);  
+            glEnable(GL_TEXTURE_2D);    glVertex3f(  maxX,  lowY, lowZ);    glTexCoord2f(0,0);    
+                                        glVertex3f(  maxX,  lowY, medZ);    glTexCoord2f(1,0);      
+                                        glVertex3f( -maxX,  lowY, medZ);    glTexCoord2f(1,1);
+                                        glVertex3f( -maxX,  lowY, lowZ);    glTexCoord2f(0,1);  glDisable(GL_TEXTURE_2D);
+                                                                                                glEnd();
             
             //  Frente
-            glBegin(GL_QUADS);  glVertex3f(  maxX,  maxY, lowZ);
-                                glVertex3f(  maxX,  maxY, midZ);
-                                glVertex3f( -maxX,  maxY, midZ);
-                                glVertex3f( -maxX,  maxY, lowZ);    glEnd();
+            glBegin(GL_QUADS);      
+            glEnable(GL_TEXTURE_2D);    glVertex3f(  maxX,  maxY, lowZ);
+                                        glVertex3f(  maxX,  maxY, midZ);
+                                        glVertex3f( -maxX,  maxY, midZ);
+                                        glVertex3f( -maxX,  maxY, lowZ);    glEnd();
+                                                                            glDisable(GL_TEXTURE_2D);
 
             //Direita e Esquerda
-            if(mode == GL_FILL || show){
+            if(mode == GL_FILL){
                 for(int i = -1; i<= 1; i+=2){
                     glBegin(GL_QUAD_STRIP);
                         glVertex3f(maxX*i, medY, lowZ);
@@ -335,63 +319,62 @@ void Car::drawMode(int mode, GLubyte color[3], bool show){
         
         // Tail
             for(int i = -1; i<=1; i+=2){
-                glBegin(GL_QUADS);  glVertex3f( tailMaxX*i,  tailMidY, medZ);
-                                    glVertex3f( tailMaxX*i,  tailLowY, tailMidZ);
-                                    glVertex3f( tailLowX*i,  tailLowY, tailMidZ);
-                                    glVertex3f( tailLowX*i,  tailMidY, medZ); glEnd();
+                glBegin(GL_QUADS);  glVertex3f( tMaxX*i,  tMedY, medZ);
+                                    glVertex3f( tMaxX*i,  tMidY, tMinZ);
+                                    glVertex3f( tMinX*i,  tMidY, tMinZ);
+                                    glVertex3f( tMinX*i,  tMedY, medZ); glEnd();
 
-                glBegin(GL_QUADS);  glVertex3f( tailMaxX*i,  tailMaxY, medZ);
-                                    glVertex3f( tailMaxX*i,  tailMidY, tailMidZ);
-                                    glVertex3f( tailLowX*i,  tailMidY, tailMidZ);
-                                    glVertex3f( tailLowX*i,  tailMaxY, medZ); glEnd();
+                glBegin(GL_QUADS);  glVertex3f( tMaxX*i,  tMaxY, medZ);
+                                    glVertex3f( tMaxX*i,  tMedY, tMinZ);
+                                    glVertex3f( tMinX*i,  tMedY, tMinZ);
+                                    glVertex3f( tMinX*i,  tMaxY, medZ); glEnd();
 
-                glBegin(GL_QUADS);  glVertex3f( tailMaxX*i,  tailMidY, medZ);
-                                    glVertex3f( tailMaxX*i,  tailMaxY, medZ);
-                                    glVertex3f( tailMaxX*i,  tailMidY, tailMidZ);
-                                    glVertex3f( tailMaxX*i,  tailLowY, tailMidZ); glEnd();
+                glBegin(GL_QUADS);  glVertex3f( tMaxX*i,  tMedY, medZ);
+                                    glVertex3f( tMaxX*i,  tMaxY, medZ);
+                                    glVertex3f( tMaxX*i,  tMedY, tMinZ);
+                                    glVertex3f( tMaxX*i,  tMidY, tMinZ); glEnd();
 
-                glBegin(GL_QUADS);  glVertex3f( tailLowX*i,  tailMidY, medZ);
-                                    glVertex3f( tailLowX*i,  tailMaxY, medZ);
-                                    glVertex3f( tailLowX*i,  tailMidY, tailMidZ);
-                                    glVertex3f( tailLowX*i,  tailLowY, tailMidZ); glEnd();
+                glBegin(GL_QUADS);  glVertex3f( tMinX*i,  tMedY, medZ);
+                                    glVertex3f( tMinX*i,  tMaxY, medZ);
+                                    glVertex3f( tMinX*i,  tMedY, tMinZ);
+                                    glVertex3f( tMinX*i,  tMidY, tMinZ); glEnd();
             }
 
-            glBegin(GL_QUADS);  glVertex3f(  maxX,     tailMidY, tailMaxZ);
-                                glVertex3f(  maxX,  tailTopMaxY, tailMaxZ);
-                                glVertex3f( -maxX,  tailTopMaxY, tailMaxZ);
-                                glVertex3f( -maxX,     tailMidY, tailMaxZ); glEnd();
+            glBegin(GL_QUADS);  glVertex3f(  maxX,  tMedY, tMaxZ);
+                                glVertex3f(  maxX,  tMinY, tMaxZ);
+                                glVertex3f( -maxX,  tMinY, tMaxZ);
+                                glVertex3f( -maxX,  tMedY, tMaxZ); glEnd();
             
-            glBegin(GL_QUADS);  glVertex3f(  maxX,     tailMaxY, tailMidZ);
-                                glVertex3f(  maxX,  tailTopLowY, tailMidZ);
-                                glVertex3f( -maxX,  tailTopLowY, tailMidZ);
-                                glVertex3f( -maxX,     tailMaxY, tailMidZ); glEnd();
+            glBegin(GL_QUADS);  glVertex3f(  maxX,  tMaxY, tMinZ);
+                                glVertex3f(  maxX,  tLowY, tMinZ);
+                                glVertex3f( -maxX,  tLowY, tMinZ);
+                                glVertex3f( -maxX,  tMaxY, tMinZ); glEnd();
 
-            glBegin(GL_QUADS);  glVertex3f(  maxX,     tailMaxY, tailMidZ);
-                                glVertex3f(  maxX,     tailMidY, tailMaxZ);
-                                glVertex3f(  maxX,  tailTopMaxY, tailMaxZ);
-                                glVertex3f(  maxX,  tailTopLowY, tailMidZ); glEnd();
+            glBegin(GL_QUADS);  glVertex3f(  maxX,  tMaxY, tMinZ);
+                                glVertex3f(  maxX,  tMedY, tMaxZ);
+                                glVertex3f(  maxX,  tMinY, tMaxZ);
+                                glVertex3f(  maxX,  tLowY, tMinZ); glEnd();
 
-            glBegin(GL_QUADS);  glVertex3f( -maxX,     tailMaxY, tailMidZ);
-                                glVertex3f( -maxX,     tailMidY, tailMaxZ);
-                                glVertex3f( -maxX,  tailTopMaxY, tailMaxZ);
-                                glVertex3f( -maxX,  tailTopLowY, tailMidZ); glEnd();
+            glBegin(GL_QUADS);  glVertex3f( -maxX,  tMaxY, tMinZ);
+                                glVertex3f( -maxX,  tMedY, tMaxZ);
+                                glVertex3f( -maxX,  tMinY, tMaxZ);
+                                glVertex3f( -maxX,  tLowY, tMinZ); glEnd();
 
-            glBegin(GL_QUADS);  glVertex3f( -maxX,  tailTopLowY, tailMidZ);
-                                glVertex3f(  maxX,  tailTopLowY, tailMidZ);
-                                glVertex3f(  maxX,  tailTopMaxY, tailMaxZ);
-                                glVertex3f( -maxX,  tailTopMaxY, tailMaxZ); glEnd();
+            glBegin(GL_QUADS);  glVertex3f( -maxX,  tLowY, tMinZ);
+                                glVertex3f(  maxX,  tLowY, tMinZ);
+                                glVertex3f(  maxX,  tMinY, tMaxZ);
+                                glVertex3f( -maxX,  tMinY, tMaxZ); glEnd();
 
-            glBegin(GL_QUADS);  glVertex3f( -maxX,  tailMaxY, tailMidZ);
-                                glVertex3f(  maxX,  tailMaxY, tailMidZ);
-                                glVertex3f(  maxX,  tailMidY, tailMaxZ);
-                                glVertex3f( -maxX,  tailMidY, tailMaxZ); glEnd();
+            glBegin(GL_QUADS);  glVertex3f( -maxX,  tMaxY, tMinZ);
+                                glVertex3f(  maxX,  tMaxY, tMinZ);
+                                glVertex3f(  maxX,  tMedY, tMaxZ);
+                                glVertex3f( -maxX,  tMedY, tMaxZ); glEnd();
         glPopMatrix();
     glPopMatrix();
 }
 
-void Car::drawWheel(float radius, float width, GLubyte color[3]){
+void Car::drawWheel(float radius, float width){
     float widthAux = width+0.5;
-    glColor3ubv(color);
     glBegin(GL_QUAD_STRIP);
         for(int i=0; i<12; i++){
             float angle = i * 2 * M_PI / 12;

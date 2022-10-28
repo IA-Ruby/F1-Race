@@ -22,40 +22,25 @@ void Field::drawMode(int mode, GLubyte color[3], bool show){
     glPolygonMode(GL_FRONT_AND_BACK, mode);
 
     //Desenha o campo e as montanhas
-    glPushMatrix();
-        glTranslatef(83,0,-6.f);
-        glColor3ubv(color);
-        for(int i=0; i<(cordY.size()-1); i++){
-            glBegin(GL_QUAD_STRIP);
-            for(int j=0; j<29; j++){
-                if(j>=20){
-                    glVertex3f( j*20, cordY[i],   cordZRight[i][j-20]);
-                    glVertex3f( j*20, cordY[i+1], cordZRight[i+1][j-20]); 
-                }else{
-                    glVertex3f( j*20, cordY[i],   1);
-                    glVertex3f( j*20, cordY[i+1], 1);
+    for(int i=-1; i<=1; i+=2){
+        glPushMatrix();
+            glTranslatef(83*i,0,-6.f);
+            glColor3ubv(color);
+            for(int j=0; j<(cordY.size()-1); j++){
+                glBegin(GL_QUAD_STRIP);
+                for(int k=0; k<34; k++){
+                    if(k>=20){
+                        glVertex3f( k*20*i, cordY[j],   cordZRight[j][k-20]);
+                        glVertex3f( k*20*i, cordY[j+1], cordZRight[j+1][k-20]); 
+                    }else{
+                        glVertex3f( k*20*i, cordY[j],   1);
+                        glVertex3f( k*20*i, cordY[j+1], 1);
+                    }
                 }
+                glEnd();
             }
-            glEnd();
-        }
-    glPopMatrix();
-    glPushMatrix();
-        glTranslatef(-83,0,-6.f);
-        glColor3ubv(color);
-        for(int i=0; i<(cordY.size()-1); i++){
-            glBegin(GL_QUAD_STRIP);
-            for(int j=0; j<29; j++){
-                if(j>=20){
-                    glVertex3f(-j*20, cordY[i],   cordZLeft[i][j-20]); 
-                    glVertex3f(-j*20, cordY[i+1], cordZLeft[i+1][j-20]); 
-                }else{
-                    glVertex3f(-j*20, cordY[i],   1);
-                    glVertex3f(-j*20, cordY[i+1], 1);
-                }
-            }
-            glEnd();
-        }
-    glPopMatrix();
+        glPopMatrix();
+    }
     
     // Desenha as arvores
     for(int i=0; i<treesLeft.size(); i++){
@@ -76,7 +61,7 @@ void Field::updField(float speed){
     // Atualiza as coordenadas das linhas
     for(int i=0; i<cordY.size(); i++){
         cordY[i] -= speed;
-        if(cordY[i]<-200.f){
+        if(cordY[i]<-400.f){
             cordY.push_back(cordY[i] + (cordY.size()*200));
             cordY.pop_front();
             i--;
@@ -114,7 +99,7 @@ void Field::updField(float speed){
 
 // Função para iniciar todas as filas;
 void Field::initQueues(){
-    for(int i=0; i<101; i++){
+    for(int i=0; i<=100; i++){
         cordZRight.push_back(randMountain());
         cordZLeft.push_back(randMountain());
         cordY.push_back(i*200);
@@ -140,7 +125,7 @@ void Field::initQueues(){
 // Função para gerar deformidade das montanhas
 vector<int> Field::randMountain(){
     vector<int> aux;
-    for(int j=0; j<10; j++){
+    for(int j=0; j<15; j++){
         if(j == 0){
             aux.push_back(rand()%10);    
         }else if(j==1){
@@ -159,7 +144,7 @@ vector<int> Field::randMountain(){
             aux.push_back(rand()%140+130);
         }else if(j==8){
             aux.push_back(rand()%150+140);
-        }else if(j==9){
+        }else if(j>=9){
             aux.push_back(rand()%155+150);
         }
     }

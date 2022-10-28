@@ -11,8 +11,8 @@ class Car{
         float rot = 0;
         float auxRot = 0;
         float speed;
-        void drawMode(int mode, GLubyte color[3], bool show);
-        void drawWheel(float radius, float width, GLubyte color[3]);
+        void drawMode(int mode, GLubyte color[3]);
+        void drawWheel(float radius, float width);
     public:
         Car(    GLubyte colorCar[3], 
                 GLubyte colorOutline[3], 
@@ -21,7 +21,7 @@ class Car{
         Car(    GLubyte colorCar[3],
                 glm::vec3 carPos, 
                 float speed);
-        void draw(bool show);
+        void draw(int texId);
         float getSpeed();
         glm::vec3 getCarPos();
         void setCarPos(float carPos);

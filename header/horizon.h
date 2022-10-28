@@ -17,10 +17,13 @@ class Horizon{
         vector<glm::vec3> starCord;
         float scale;
         float rotCam;
+        bool lines;
+        bool city;
         void drawStars();
         void drawSun();
         void drawSunLines();
-        void drawGlow();
+        void drawSunGlow();
+        void drawSunFrontGlow();
         void drawCity();
         void drawGlowCity();
     public:
@@ -29,7 +32,9 @@ class Horizon{
                     GLubyte colorStars[3],
                     GLubyte colorBG[3], 
                     glm::vec3 sunPos,
-                    float scale);
+                    float scale,
+                    bool lines,
+                    bool city);
         void draw(glm::vec3 camPos);    
 };
 

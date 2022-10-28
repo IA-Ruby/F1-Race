@@ -3,32 +3,29 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
-#
 #include "../glm/glm.hpp"
 #include "../glm/ext.hpp"
 #include "time.h"
+#include "../header/stb_image.h"
 
-#include "../header/player.h"
 #include "player.cpp"
-#include "../header/horizon.h"
 #include "horizon.cpp"
-#include "../header/road.h"
 #include "road.cpp"
-#include "../header/field.h"
 #include "field.cpp"
+#include "finalRoad.cpp"
 
 #define FPS 60
 
 // Inicializando variaveis
 float turn = 0;
-float aux = 0;
 bool acl = false;
 bool brake = false;
 bool camFree = false;
-bool showMap = true;
 bool showLines = false;
 
-glm::vec3 camPosFree(100,-200,50);
+int scene = 0;
+
+glm::vec3 camPos(100,-200,50);
 
 // Defining Colors
 GLubyte colorCar[]     = {255, 240, 255};
@@ -42,21 +39,54 @@ GLubyte colorWood[]    = {150, 100, 100};
 
 // Criando os objetos
 Player player(colorBG, colorCar, glm::vec3(0,0,0), 0.f);
-Horizon horizon(colorSun, colorLight, colorField, colorBG, glm::vec3(0,19000,1000), 900.f);
+Horizon horizon(colorSun, colorLight, colorField, colorBG, glm::vec3(0,19500,1000), 900.f, true, true);
 Road road(colorRoad, colorBG, glm::vec3(0,0,0));
 Field field(colorField, colorBG, colorLeaves, colorWood);
+FinalRoad final(colorLight, colorBG);
+Horizon finalHorizon(colorSun, colorLight, colorField, colorBG, glm::vec3(0,19500,0), 1500.f, false, false);
 
-void draw(float time, glm::vec3 camPos){
-    if(showMap){
+void draw(float time, glm::vec3 camPos, int texId){
+    if(scene == 1){
         horizon.draw(camPos);
-        field.draw(player.getSpeed(),showLines);
-        road.draw(player.getSpeed(),showLines);
+        field.draw(player.getSpeed(), showLines);
+        road.draw(player.getSpeed(), texId);
+    }else if(scene == 2){
+        final.draw(player.getSpeed());
+        finalHorizon.draw(camPos);
+    }else if(scene == 3){
+
+    }else if(scene == 4){
+
+    }else if(scene == 5){
+        
     }
-    player.draw(showLines);
+    player.draw(texId);
     glFlush();
 }
 
 int main(){
+    // Criando a textura do carro
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // set the texture wrapping/filtering options (on the currently bound texture object)
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the texture
+    int width, height, nrChannels;
+
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char *data = stbi_load("../textures/car.jpg", &width, &height, &nrChannels, 0);
+    if(data){
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);   
+    }else{
+        return 1;
+    }
+    stbi_image_free(data);
+
     sf::ContextSettings contextSettings;
     contextSettings.depthBits = 24;
     contextSettings.antialiasingLevel = 2;  
@@ -82,20 +112,15 @@ int main(){
     //  Habilitando o uso do Alpha
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-
     glEnable(GL_DEPTH_TEST);
-    
     glViewport(0, 0, window.getSize().x, window.getSize().y);
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat ratio = static_cast<float>(window.getSize().x) / window.getSize().y;
     glFrustum(-ratio, ratio, -1.f, 1.f, 10.f, 20000.f);
-    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    
 
     while (window.isOpen()){
-
         //  Os tratamentos de eventos são realizados no loop principal e não no loop de eventos para evitar delay           
         if(brake) player.brake(frameTime.asSeconds());
         if(!acl)player.slowDown(frameTime.asSeconds());
@@ -103,77 +128,28 @@ int main(){
                 else player.speedUp(frameTime.asSeconds());
         
         while (window.pollEvent(ev)){
-            switch(ev.type){
-                case sf::Event::Closed:
-                    window.close(); 
-                    break;
-                case sf::Event::KeyReleased:
-                    clock.restart(); 
-                    acl = false;
-                    brake = false;
-                    turn = 0;
-                    break;
-                case sf::Event::KeyPressed:
-                    switch(ev.key.code){
-                        case sf::Keyboard::Escape: 
-                            window.close(); 
-                            break;
-                        case sf::Keyboard::Up: 
-                            acl = true;
-                            break;
-                        case sf::Keyboard::Left:
-                            acl = true;
-                            turn = -5;        
-                            break;
-                        case sf::Keyboard::Right:
-                            acl = true;
-                            turn = 5;
-                            break;
-                        case sf::Keyboard::Down:
-                            acl = false;
-                            brake = true;
-                            break;
-                        case sf::Keyboard::Z:
-                            camPosFree.z += 10;
-                            break;
-                        case sf::Keyboard::X:
-                            camPosFree.z -= 10;
-                            break;
-                        case sf::Keyboard::A:
-                            camPosFree.y += 10;
-                            break;
-                        case sf::Keyboard::S:
-                            camPosFree.y -= 10;
-                            break;
-                        case sf::Keyboard::Q:
-                            camPosFree.x += 10;
-                            break;
-                        case sf::Keyboard::W:
-                            camPosFree.x -= 10;
-                            break;
-                        case sf::Keyboard::C:
-                            if(camFree)
-                                camFree = false;
-                            else
-                                camFree = true;
-                            break;
-                        case sf::Keyboard::B:
-                            if(showMap)
-                                showMap = false;
-                            else
-                                showMap = true;
-                            break;
-                        case sf::Keyboard::V:
-                            if(showLines)
-                                showLines = false;
-                            else
-                                showLines = true;
-                            break;
-                        case sf::Keyboard::R:
-                                camPosFree = glm::vec3(100,-200,50);
-                            break;
-                    }
-                break;
+            if(ev.type == sf::Event::Closed){ window.close(); }
+            if(ev.type == sf::Event::KeyReleased){ clock.restart(); acl = false; brake = false; turn = 0; }
+            if(ev.type == sf::Event::KeyPressed){
+                if(ev.key.code == sf::Keyboard::Escape ){ window.close();}
+                if(ev.key.code == sf::Keyboard::Up     ){ acl = true; }
+                if(ev.key.code == sf::Keyboard::Right  ){ acl = true; turn = 5; }  
+                if(ev.key.code == sf::Keyboard::Left   ){ acl = true; turn = -5; }
+                if(ev.key.code == sf::Keyboard::Down   ){ acl = false; brake = true; }
+                if(ev.key.code == sf::Keyboard::V      ){ showLines = !showLines; }
+                if(ev.key.code == sf::Keyboard::C      ){ camFree = !camFree; }
+                if(ev.key.code == sf::Keyboard::Z      ){ camPos.z += 20; }
+                if(ev.key.code == sf::Keyboard::X      ){ camPos.z -= 20; }
+                if(ev.key.code == sf::Keyboard::A      ){ camPos.y += 20; }
+                if(ev.key.code == sf::Keyboard::S      ){ camPos.y -= 20; }
+                if(ev.key.code == sf::Keyboard::Q      ){ camPos.x += 20; }
+                if(ev.key.code == sf::Keyboard::W      ){ camPos.x -= 20; }
+                if(ev.key.code == sf::Keyboard::R      ){ camPos = glm::vec3(100,-200,50); }
+                if(ev.key.code == sf::Keyboard::Num1   ){ scene = 1; }
+                if(ev.key.code == sf::Keyboard::Num2   ){ scene = 2; }
+                if(ev.key.code == sf::Keyboard::Num3   ){ scene = 3; }
+                if(ev.key.code == sf::Keyboard::Num4   ){ scene = 4; }
+                if(ev.key.code == sf::Keyboard::Num5   ){ scene = 5; }
             }
         }
 
@@ -183,26 +159,16 @@ int main(){
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         
-        if(camFree){ 
-            glm::mat4 matrizCameraFree =    glm::lookAt(camPosFree,                            
-                                            glm::vec3(0,0,0),   
-                                            glm::vec3(0,0,1));
-
-            glMultMatrixf(glm::value_ptr(matrizCameraFree));
-            draw(frameTime.asSeconds(), camPosFree); 
-
-        }else{
-            glm::vec3 camPos =  {player.getCarPos().x,            // Alinhado com o carro no eixo X
-                                (player.getCarPos().y) - 300,     // Atrás do carro no eixo Y
-                                (player.getCarPos().z) + 20};     // Acima do carro no eixo Z
-
-            glm::mat4 matrizCamera =    glm::lookAt(camPos,                             
-                                        glm::vec3(camPos[0], (camPos[1]+1), (camPos[2])),   
-                                        glm::vec3(0,0,1));
-
-            glMultMatrixf(glm::value_ptr(matrizCamera));
-            draw(frameTime.asSeconds(), camPos); 
-        }
+        glm::vec3 camPosAux(camPos);
+        glm::vec3 lookAtAux(0,0,0);
+        if(!camFree){
+            camPosAux = {player.getCarPos().x, player.getCarPos().y - 300,player.getCarPos().z + 20};        
+            lookAtAux = {camPosAux[0], camPosAux[1]+1, camPosAux[2]};
+        }      
+        glm::mat4 matrizCamera = glm::lookAt(camPosAux, glm::vec3(lookAtAux), glm::vec3(0,0,1));
+        glMultMatrixf(glm::value_ptr(matrizCamera));
+        
+        draw(frameTime.asSeconds(), camPosAux, texture);
 
         window.display();
     }

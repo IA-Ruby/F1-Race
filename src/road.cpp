@@ -13,7 +13,7 @@ Road::Road(GLubyte colorRoad[3], GLubyte colorBG[3], glm::vec3 roadPos){
     }
 }
 
-void Road::draw(float speed, bool show){
+void Road::draw(float speed, int texId){
     //  Atuaiza as variaveis com base na velocidade informada
     updRoad(speed);
     
@@ -44,9 +44,8 @@ void Road::draw(float speed, bool show){
     }
 
     // Desenha os inimigos
-    glPopMatrix();
     for(int i=0; i<enemies.size(); i++){
-        enemies[i].draw(show);
+        enemies[i].draw(texId);
     }
 }
 
