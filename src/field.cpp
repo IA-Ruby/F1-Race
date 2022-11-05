@@ -1,23 +1,22 @@
 #include "../header/field.h"
 #include <GL/gl.h>
 
-Field::Field(GLubyte colorField[3], GLubyte colorBG[3], GLubyte colorLeaves[3], GLubyte colorWood[3]){
+Field::Field(GLubyte colorField[3], GLubyte colorBG[3]){
     for(int i=0; i<3; i++){
         this->colorField[i] = colorField[i]; 
         this->colorBG[i] = colorBG[i];
-        this->colorLeaves[i] = colorLeaves[i];
-        this->colorWood[i] = colorWood[i];
     }
     initQueues();
 }
 
-void Field::draw(float speed, bool show){
+void Field::draw(float speed){
     updField(speed);
-    drawMode(GL_LINE,colorField, show);
-    drawMode(GL_FILL,colorBG, show);
+    drawMode(GL_LINE,colorField);
+    drawMode(GL_FILL,colorBG);
+    drawTrees();
 }
 
-void Field::drawMode(int mode, GLubyte color[3], bool show){
+void Field::drawMode(int mode, GLubyte color[3]){
     //Alternancia entre preenchimento e contorno
     glPolygonMode(GL_FRONT_AND_BACK, mode);
 
@@ -33,25 +32,27 @@ void Field::drawMode(int mode, GLubyte color[3], bool show){
                         glVertex3f( k*20*i, cordY[j],   cordZRight[j][k-20]);
                         glVertex3f( k*20*i, cordY[j+1], cordZRight[j+1][k-20]); 
                     }else{
-                        glVertex3f( k*20*i, cordY[j],   1);
-                        glVertex3f( k*20*i, cordY[j+1], 1);
+                        glVertex3f( k*20*i, cordY[j],   0);
+                        glVertex3f( k*20*i, cordY[j+1], 0);
                     }
                 }
                 glEnd();
             }
         glPopMatrix();
     }
-    
+}
+
+void Field::drawTrees(){
     // Desenha as arvores
     for(int i=0; i<treesLeft.size(); i++){
         glPushMatrix();
             glTranslatef(-200,treesLeft[i].getCordTree(), -5.8);
-            treesLeft[i].draw(show);
+            treesLeft[i].draw();
         glPopMatrix();
         glPushMatrix();
             glTranslatef(200,treesRight[i].getCordTree(), -5.8);
             glRotatef(180,0,0,1);
-            treesRight[i].draw(show);
+            treesRight[i].draw();
         glPopMatrix();
     }
 }
@@ -77,10 +78,7 @@ void Field::updField(float speed){
         treesRight[i].setCordTree(treesRight[i].getCordTree() - speed);
         if(treesRight[i].getCordTree() < -200.f){
             treesRight.pop_front();
-            treesRight.push_back(Tree(  colorLeaves, 
-                                        colorWood, 
-                                        colorBG, 
-                                        (treesRight.back().getCordTree()+2000+rand()%1000-500)));
+            treesRight.push_back( Tree(colorBG, (treesRight.back().getCordTree()+2000+rand()%1000-500)));
             i--; 
         }
     }
@@ -88,10 +86,7 @@ void Field::updField(float speed){
         treesLeft[i].setCordTree(treesLeft[i].getCordTree() - speed);
         if(treesLeft[i].getCordTree() < -200.f){
             treesLeft.pop_front();
-            treesLeft.push_back(Tree(  colorLeaves, 
-                                        colorWood, 
-                                        colorBG, 
-                                        (treesLeft.back().getCordTree()+2000+rand()%1000-500)));
+            treesLeft.push_back( Tree(colorBG, (treesLeft.back().getCordTree()+2000+rand()%1000-500)));
             i--;
         }
     }
@@ -105,48 +100,29 @@ void Field::initQueues(){
         cordY.push_back(i*200);
     }
 
-    treesRight.push_back(Tree(colorLeaves, colorWood, colorBG, 2000+rand()%1000-500));
-    for(int i = 0; treesRight.back().getCordTree() < 18000; i++){
-        treesRight.push_back(Tree(  colorLeaves, 
-                                    colorWood, 
-                                    colorBG, 
-                                    (treesRight[i].getCordTree()+2000+(rand()%1000-500))));        
-    }
+    treesRight.push_back(Tree(colorBG, 2000+rand()%1000-500));
+    for(int i = 0; treesRight.back().getCordTree() < 18000; i++)
+        treesRight.push_back( Tree(colorBG, (treesRight[i].getCordTree()+2000+(rand()%1000-500))));        
 
-    treesLeft.push_back(Tree(colorLeaves, colorWood, colorBG, 2000+rand()%1000-500));
-    for(int i = 0; treesLeft.back().getCordTree() < 18000; i++){
-        treesLeft.push_back(Tree(   colorLeaves, 
-                                    colorWood, 
-                                    colorBG, 
-                                    (treesLeft[i].getCordTree()+2000+(rand()%1000-500))));        
-    }
+    treesLeft.push_back(Tree(colorBG, 2000+rand()%1000-500));
+    for(int i = 0; treesLeft.back().getCordTree() < 18000; i++)
+        treesLeft.push_back( Tree(colorBG, (treesLeft[i].getCordTree()+2000+(rand()%1000-500))));        
 }
 
 // Função para gerar deformidade das montanhas
 vector<int> Field::randMountain(){
     vector<int> aux;
     for(int j=0; j<15; j++){
-        if(j == 0){
-            aux.push_back(rand()%10);    
-        }else if(j==1){
-            aux.push_back(rand()%30+10);
-        }else if(j==2){
-            aux.push_back(rand()%60+30);
-        }else if(j==3){
-            aux.push_back(rand()%80+60);
-        }else if(j==4){
-            aux.push_back(rand()%100+80);
-        }else if(j==5){
-            aux.push_back(rand()%120+100);
-        }else if(j==6){
-            aux.push_back(rand()%130+120);
-        }else if(j==7){
-            aux.push_back(rand()%140+130);
-        }else if(j==8){
-            aux.push_back(rand()%150+140);
-        }else if(j>=9){
-            aux.push_back(rand()%155+150);
-        }
+        if(j == 0) aux.push_back(rand()%10);    
+        if(j == 1) aux.push_back(rand()%30+10);
+        if(j == 2) aux.push_back(rand()%60+30);
+        if(j == 3) aux.push_back(rand()%80+60);
+        if(j == 4) aux.push_back(rand()%100+80);
+        if(j == 5) aux.push_back(rand()%120+100);
+        if(j == 6) aux.push_back(rand()%130+120);
+        if(j == 7) aux.push_back(rand()%140+130);
+        if(j == 8) aux.push_back(rand()%150+140);
+        if(j >= 9) aux.push_back(rand()%155+150);
     }
     return aux;
 }

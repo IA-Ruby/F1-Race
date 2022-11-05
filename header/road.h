@@ -14,13 +14,13 @@ class Road{
         GLubyte colorRoad[3];
         GLubyte colorBG[3];
         glm::vec3 roadPos;
+        unsigned int carTexId;
         void updRoad(float speed);
         void drawQuad(float x, float y);
     public:
-        Road(   GLubyte colorRoad[3],
-                GLubyte colorBG[3], 
-                glm::vec3 roadPos);
-        void draw(float speed, int texId);
+        Road( GLubyte colorRoad[3], GLubyte colorBG[3], glm::vec3 roadPos);
+        void draw(float speed);
+        void setCarTexId(unsigned int carTexId);
 };
 
 #endif

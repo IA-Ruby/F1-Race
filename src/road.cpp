@@ -13,7 +13,7 @@ Road::Road(GLubyte colorRoad[3], GLubyte colorBG[3], glm::vec3 roadPos){
     }
 }
 
-void Road::draw(float speed, int texId){
+void Road::draw(float speed){
     //  Atuaiza as variaveis com base na velocidade informada
     updRoad(speed);
     
@@ -45,7 +45,7 @@ void Road::draw(float speed, int texId){
 
     // Desenha os inimigos
     for(int i=0; i<enemies.size(); i++){
-        enemies[i].draw(texId);
+        enemies[i].draw();
     }
 }
 
@@ -65,12 +65,14 @@ void Road::updRoad(float speed){
             enemies.push_front(Car( colorBG, 
                                     glm::vec3((rand()%120-60),-4000,0), 
                                     150.f));
+            enemies.front().setTexId(carTexId);
 
-        // Verifica se o inimigo mais longe está antes da linhad e surgimento
+        // Verifica se o inimigo mais longe está antes da linha de surgimento
         }else if(enemies.back().getCarPos().y <= 15000.f){
             enemies.push_back(Car(  colorBG, 
                                     glm::vec3(rand()%120-60,19500,0), 
                                     150.f));
+            enemies.back().setTexId(carTexId);
         } 
     }
 
@@ -97,7 +99,7 @@ void Road::updRoad(float speed){
         cordY[i] -= speed;
         if(cordY[i]<-200.f){
             cordY.push_back(cordY[i] + (cordY.size()*500.f));
-            cordY.pop_front();;
+            cordY.pop_front();
             i--;
         }
     }
@@ -110,4 +112,8 @@ void Road::drawQuad(float x, float y){
         glVertex3f(-x, y, 0);
         glVertex3f(-x,-y, 0);
     glEnd();
+}
+
+void Road::setCarTexId(unsigned int carTexId){
+    this->carTexId = carTexId;
 }

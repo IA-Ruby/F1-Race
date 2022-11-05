@@ -38,10 +38,11 @@ void Player::slowDown(float time){
 }
 
 // Girar - O carro se desloca para direita ou esquerda e rotaciona 
-void Player::turn(float dist, float time){
+void Player::turn(float dist, bool move){
     float max = 60;
-    if(carPos[0]+(dist*time*(speed/3)) <= max && carPos[0]+(dist*time*(speed/3)) >= -max){
-        carPos[0] += dist*time*(speed/3);
+    if(carPos[0]+(dist*(speed/3)) <= max && carPos[0]+(dist*(speed/3)) >= -max){
+        if(move)
+            carPos[0] += dist*(speed/3);
         if(dist>0){
             rot = -10.f*((speed/100));
         }else{
@@ -50,7 +51,6 @@ void Player::turn(float dist, float time){
     }else if(dist>0){
         carPos[0] = max;
         rot = 0;
-        
     }else{
         carPos[0] = -max;
         rot = 0;

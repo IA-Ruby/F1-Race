@@ -14,7 +14,7 @@ class Player: public Car{
         void brake(float time);
         void speedUp(float time);
         void slowDown(float time);
-        void turn(float dist,float time);
+        void turn(float dist, bool move);
 };
 
 #endif

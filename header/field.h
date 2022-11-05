@@ -18,18 +18,14 @@ class Field{
         deque<Tree> treesLeft;
         GLubyte colorField[3];
         GLubyte colorBG[3];
-        GLubyte colorLeaves[3];
-        GLubyte colorWood[3];
-        void drawMode(int mode, GLubyte color[3], bool show);
+        void drawMode(int mode, GLubyte color[3]);
+        void drawTrees();
         void updField(float speed);
         void initQueues();
         vector<int> randMountain();
     public:
-        Field(  GLubyte colorField[3], 
-                GLubyte colorBack[3],
-                GLubyte colorLeaves[3],
-                GLubyte colorWood[3]);
-        void draw(float speed, bool show);
+        Field( GLubyte colorField[3], GLubyte colorBack[3]);
+        void draw(float speed);
 };
 
 #endif

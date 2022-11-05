@@ -6,10 +6,8 @@
     #define M_PI 3.14159265358979323846
 #endif
 
-Tree::Tree(GLubyte colorLeaves[3], GLubyte colorWood[3], GLubyte colorTree[3],float cordTree){
+Tree::Tree(GLubyte colorTree[3], float cordTree){
     for(int i=0; i<3; i++){
-        this->colorLeaves[i] = colorLeaves[i];
-        this->colorWood[i] = colorWood[i];
         this->colorTree[i] = colorTree[i];
     }
     int aux = rand()%4+8;
@@ -22,22 +20,14 @@ Tree::Tree(GLubyte colorLeaves[3], GLubyte colorWood[3], GLubyte colorTree[3],fl
     this->cordTree = cordTree;        
 }
 
-void Tree::draw(bool show){
-    if(show)
-        drawMode(GL_LINE, colorWood, colorLeaves);
-    
-    drawMode(GL_FILL, colorTree, colorTree);
-}
-
-void Tree::drawMode(int mode, GLubyte color1[3], GLubyte color2[3]){
-    glPolygonMode(GL_FRONT_AND_BACK, mode);
+void Tree::draw(){
+    glColor3ubv(colorTree);
     for(int i=0; i<sizeTree; i++){ 
         float aux = widthTree-(widthTree/sizeTree*i)+1;
         glPushMatrix();
             glRotatef(90,0,0,1);
             glRotatef(i,1,0,0);
             glTranslatef(0,0,i*10);
-            glColor3ubv(color1);
             glBegin(GL_QUAD_STRIP);
                 for(int j=0; j<12; j++){
                     float angulo = j * 2 * M_PI / 12;
@@ -54,7 +44,6 @@ void Tree::drawMode(int mode, GLubyte color1[3], GLubyte color2[3]){
         glRotatef(90,0,0,1);
         glRotatef(sizeTree,1,0,0);
         glTranslatef(0,0,((sizeTree-1)*10));
-        glColor3ubv(color2);
         for(int i=0; i<angleLeavesZ.size(); i++){
             glPushMatrix();
                 glRotatef(angleLeavesX[i], 0, 0, 1);

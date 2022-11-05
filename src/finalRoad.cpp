@@ -25,12 +25,12 @@ void FinalRoad::drawMode(int mode, GLubyte color[3]){
     glPolygonMode(GL_FRONT_AND_BACK, mode);
     glPushMatrix();
         glColor3ubv(color);
-        glTranslatef(0,0,-6.f);
+        glTranslatef(0,0,-5.1);
         for(int i=0; i<(cordY.size()-1); i++){
             glBegin(GL_QUAD_STRIP);
             for(int j=-100; j<100; j++){
-                glVertex3f( j*20, cordY[i],   1);
-                glVertex3f( j*20, cordY[i+1], 1);
+                glVertex3f( j*20, cordY[i],   0);
+                glVertex3f( j*20, cordY[i+1], 0);
             }
             glEnd();
         }

@@ -40,7 +40,7 @@ Car::Car(GLubyte colorCar[3], glm::vec3 pos, float speed){
     }
 }
 
-void Car::draw(int texId){
+void Car::draw(){
     glLineWidth(4.0f);
     drawMode(GL_LINE, colorOutline);
     glLineWidth(1.0f);
@@ -203,23 +203,21 @@ void Car::drawMode(int mode, GLubyte color[3]){
                                         glVertex3f(  midX*i,  midY*j, midZ);    glEnd();
                 }
             }
-            
+       
         //  Laterais
             //  Tras
-            glBegin(GL_QUADS);  
-            glEnable(GL_TEXTURE_2D);    glVertex3f(  maxX,  lowY, lowZ);    glTexCoord2f(0,0);    
-                                        glVertex3f(  maxX,  lowY, medZ);    glTexCoord2f(1,0);      
-                                        glVertex3f( -maxX,  lowY, medZ);    glTexCoord2f(1,1);
-                                        glVertex3f( -maxX,  lowY, lowZ);    glTexCoord2f(0,1);  glDisable(GL_TEXTURE_2D);
-                                                                                                glEnd();
-            
+            glBindTexture(GL_TEXTURE_2D, texId);
+            glBegin(GL_QUADS);  glTexCoord2f(0,0);  glVertex3f(  maxX,  lowY, lowZ);        
+                                glTexCoord2f(1,0);  glVertex3f(  maxX,  lowY, medZ);          
+                                glTexCoord2f(1,1);  glVertex3f( -maxX,  lowY, medZ);    
+                                glTexCoord2f(0,1);  glVertex3f( -maxX,  lowY, lowZ);    glEnd();
+            glBindTexture(GL_TEXTURE_2D, 0);
+
             //  Frente
-            glBegin(GL_QUADS);      
-            glEnable(GL_TEXTURE_2D);    glVertex3f(  maxX,  maxY, lowZ);
-                                        glVertex3f(  maxX,  maxY, midZ);
-                                        glVertex3f( -maxX,  maxY, midZ);
-                                        glVertex3f( -maxX,  maxY, lowZ);    glEnd();
-                                                                            glDisable(GL_TEXTURE_2D);
+            glBegin(GL_QUADS);  glVertex3f(  maxX,  maxY, lowZ);
+                                glVertex3f(  maxX,  maxY, midZ);
+                                glVertex3f( -maxX,  maxY, midZ);
+                                glVertex3f( -maxX,  maxY, lowZ);    glEnd();
 
             //Direita e Esquerda
             if(mode == GL_FILL){
@@ -374,7 +372,6 @@ void Car::drawMode(int mode, GLubyte color[3]){
 }
 
 void Car::drawWheel(float radius, float width){
-    float widthAux = width+0.5;
     glBegin(GL_QUAD_STRIP);
         for(int i=0; i<12; i++){
             float angle = i * 2 * M_PI / 12;
@@ -388,37 +385,49 @@ void Car::drawWheel(float radius, float width){
         for(int i=0; i<12; i++){
             float angle = i * 2 * M_PI / 12;
             glVertex3f(cos(angle)*radius, sin(angle)*radius,width);
-            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75), widthAux);
+            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75), width
+    );
         }
         glVertex3f(cos(0)*radius, sin(0)*radius, width);
-        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), widthAux);
+        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), width
+);
     glEnd();
     glBegin(GL_QUAD_STRIP);
         for(int i=0; i<12; i++){
             float angle = i * 2 * M_PI / 12;
             glVertex3f(cos(angle)*radius, sin(angle)*radius,-width);
-            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75), -widthAux);
+            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75), -width
+    );
         }
         glVertex3f(cos(0)*radius, sin(0)*radius, -width);
-        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), -widthAux);
+        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), -width
+);
     glEnd();
     glBegin(GL_QUAD_STRIP);
         for(int i=0; i<12; i++){
             float angle = i * 2 * M_PI / 12;
-            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75),-widthAux);
-            glVertex3f(cos(angle)*(radius * 0.25), sin(angle)*(radius * 0.25), -widthAux);
+            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75),-width
+    );
+            glVertex3f(cos(angle)*(radius * 0.25), sin(angle)*(radius * 0.25), -width
+    );
         }
-        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), -widthAux);
-        glVertex3f(cos(0)*(radius * 0.25), sin(0)*(radius * 0.25), -widthAux);
+        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), -width
+);
+        glVertex3f(cos(0)*(radius * 0.25), sin(0)*(radius * 0.25), -width
+);
     glEnd();
     glBegin(GL_QUAD_STRIP);
         for(int i=0; i<12; i++){
             float angle = i * 2 * M_PI / 12;
-            glVertex3f(cos(angle)*(radius * 0.25), sin(angle)*(radius * 0.25),-widthAux);
-            glVertex3f(cos(angle)*(radius * 0.25), sin(angle)*(radius * 0.25),-widthAux*2);
+            glVertex3f(cos(angle)*(radius * 0.25), sin(angle)*(radius * 0.25),-width
+    );
+            glVertex3f(cos(angle)*(radius * 0.25), sin(angle)*(radius * 0.25),-width
+    *2);
         }
-        glVertex3f(cos(0)*(radius * 0.25), sin(0)*(radius * 0.25), -widthAux);
-        glVertex3f(cos(0)*(radius * 0.25), sin(0)*(radius * 0.25), -widthAux*2);
+        glVertex3f(cos(0)*(radius * 0.25), sin(0)*(radius * 0.25), -width
+);
+        glVertex3f(cos(0)*(radius * 0.25), sin(0)*(radius * 0.25), -width
+*2);
     glEnd();
 
     glColor3f(1,1,1);
@@ -426,9 +435,11 @@ void Car::drawWheel(float radius, float width){
         //glVertex3f(0,0,width2);
         for(int i=0; i<12; i++){
             float angle = i * 2 * M_PI / 12;
-            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75),widthAux);
+            glVertex3f(cos(angle)*(radius * 0.75), sin(angle)*(radius * 0.75),width
+    );
         }
-        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), widthAux);
+        glVertex3f(cos(0)*(radius * 0.75), sin(0)*(radius * 0.75), width
+);
     glEnd();   
 }
 
@@ -438,6 +449,14 @@ glm::vec3 Car::getCarPos(){
 
 void Car::setCarPos(float carPos){
     this->carPos.y = carPos;
+}
+
+void Car::setCarPos(glm::vec3 carPos){
+    this->carPos = carPos;
+}
+
+void Car::setTexId(unsigned int texId){
+    this->texId = texId;
 }
 
 float Car::getSpeed(){
