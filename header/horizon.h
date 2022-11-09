@@ -7,7 +7,8 @@
 
 using namespace std;
 
-class Horizon{
+class Horizon
+{
     private:
         GLubyte colorSun[3];
         GLubyte colorLight[3];
@@ -26,15 +27,17 @@ class Horizon{
         void drawSunFrontGlow();
         void drawCity();
         void drawGlowCity();
+    
     public:
-        Horizon(    GLubyte colorSun[3], 
-                    GLubyte colorLight[3],
-                    GLubyte colorStars[3],
-                    GLubyte colorBG[3], 
-                    glm::vec3 sunPos,
-                    float scale,
-                    bool lines,
-                    bool city);
+        Horizon(GLubyte colorSun[3],
+                GLubyte colorLight[3],
+                GLubyte colorStars[3],
+                GLubyte colorBG[3],
+                glm::vec3 sunPos,
+                float scale,
+                bool lines,
+                bool city);
+                
         void draw(glm::vec3 camPos);    
 };
 

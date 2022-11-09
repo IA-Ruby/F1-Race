@@ -6,7 +6,8 @@
 
 using namespace std;
 
-class FunnyTunnel{
+class FunnyTunnel
+{
     private:
         deque<float> cordY;
         deque<float> cordX;
@@ -16,6 +17,7 @@ class FunnyTunnel{
         float auxRot = 0;
         void updTunnel(float speed);
         void drawMode(int mode, GLubyte color[3], float scale);
+    
     public:
         FunnyTunnel(GLubyte colorTunnel[3], GLubyte colorBG[3]);
         void draw(float speed, int dist);

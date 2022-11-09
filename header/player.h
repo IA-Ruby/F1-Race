@@ -8,11 +8,13 @@
 #include "car.h"
 #include "../src/car.cpp"
 
-class Player: public Car{
+class Player: public Car
+{
     public:
         using Car::Car;
         void brake(float time);
         void speedUp(float time);
+        void nitro(float time);
         void slowDown(float time);
         void turn(float dist, bool move);
 };

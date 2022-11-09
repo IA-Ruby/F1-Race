@@ -5,11 +5,13 @@
 
 using namespace glm;
 
-class Camera{
+class Camera
+{
     private:
         vec3 camPos;
         vec3 camLookAt;
         vec3 camTop;
+    
     public:
         Camera(vec3 camPos, vec3 camLookAt, vec3 camTop);
         void rotateCam(float amount, vec3 axis);

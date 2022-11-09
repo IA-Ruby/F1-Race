@@ -3,7 +3,8 @@
 
 #include "../glm/vec3.hpp"
 
-class Car{
+class Car
+{
     protected:
         GLubyte colorCar[3];
         GLubyte colorOutline[3];
@@ -14,6 +15,7 @@ class Car{
         unsigned int texId;
         void drawMode(int mode, GLubyte color[3]);
         void drawWheel(float radius, float width);
+  
     public:
         Car(GLubyte colorCar[3], GLubyte colorOutline[3], glm::vec3 carPos, float speed);
         Car(GLubyte colorCar[3], glm::vec3 carPos, float speed);

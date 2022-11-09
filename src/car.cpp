@@ -52,19 +52,39 @@ void Car::drawMode(int mode, GLubyte color[3]){
     glPushMatrix();
         glTranslatef(carPos.x,carPos.y,carPos.z);
         glRotatef(rot,0,0,1); 
-        glTranslatef(-carPos.x,-carPos.y,-carPos.z);    // Volta pra origem
+        glTranslatef(-carPos.x,-carPos.y,-carPos.z);  // Volta pra origem
 
         // Algumas variaveis pra ajudar no mapeamento do carro
         
         float   // Eixo X
-                outX = 14.6, maxX = 13.25, midX = 5, medX = 10, tMaxX = 10, tMinX = 9.5,
+                outX = 14.6, 
+                maxX = 13.25, 
+                midX = 5, 
+                medX = 10, 
+                tMaxX = 10, 
+                tMinX = 9.5,
 
                 // Eixo Y
-                maxY = 35, lowY = -30, medY = 21, midY = 9, mid2Y = 8, med2Y = 20, 
-                tMaxY = -28, tMedY = -29, tMidY = -30, tLowY = -31, tMinY = -32,
+                maxY = 35, 
+                lowY = -30, 
+                medY = 21,
+                midY = 9, 
+                mid2Y = 8, 
+                med2Y = 20, 
+                tMaxY = -28, 
+                tMedY = -29, 
+                tMidY = -30, 
+                tLowY = -31, 
+                tMinY = -32,
 
                 // Eixo Z
-                maxZ = 15, lowZ = -1.5, dwnZ = 0,midZ = 6, medZ = 9, tMaxZ = 14, tMinZ = 13;
+                maxZ = 15, 
+                lowZ = -1.5, 
+                dwnZ = 0,
+                midZ = 7, 
+                medZ = 9, 
+                tMaxZ = 14, 
+                tMinZ = 13;
 
         // Atualização da variavel de rotação
         auxRot = auxRot + (0.25*speed);
@@ -455,10 +475,10 @@ void Car::setCarPos(glm::vec3 carPos){
     this->carPos = carPos;
 }
 
-void Car::setTexId(unsigned int texId){
-    this->texId = texId;
-}
-
 float Car::getSpeed(){
     return speed; 
+}
+
+void Car::setTexId(unsigned int texId){
+    this->texId = texId;
 }
