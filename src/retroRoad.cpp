@@ -1,55 +1,102 @@
-#include "../header/field.h"
-#include <GL/gl.h>
+#include "../header/retroRoad.h"
 
-Field::Field(GLubyte colorField[3], GLubyte colorBG[3])
+RetroRoad::RetroRoad(GLubyte colorRoad[3], GLubyte colorField[3], GLubyte colorBG[3], int texId)
+:
+    enemy( colorBG, colorRoad, vec3(0,600,0), 150, texId)
 {
     for (int i = 0; i < 3; i++)
     {
+        this->colorRoad[i] = colorRoad[i];
         this->colorField[i] = colorField[i];
         this->colorBG[i] = colorBG[i];
     }
+    
     initQueues();
-    // finish = false;
 }
 
-void Field::draw(float speed)
+void RetroRoad::draw(float speed)
 {
-    updField(speed);
+    updRoad(speed);
     drawMountains(GL_LINE, colorField);
     drawMountains(GL_FILL, colorBG);
     drawTrees();
+    drawRoad();
+    enemy.draw();
+
     // if(finish)
     // {
-    //     drawTunnel(GL_LINE, colorField);
+    //     drawTunnel(GL_LINE, colorRetroRoad);
     //     drawTunnel(GL_FILL, colorBG);
     // }
 }
 
-void Field::drawMountains(int mode, GLubyte color[3])
+// Desenha a pista
+void RetroRoad::drawRoad()
 {
-    // Alternancia entre preenchimento e contorno
+    glPushMatrix();
+        glTranslatef(0, 6400, -5.1);
+        glColor3ubv(colorBG);
+        drawQuad(80.f, 8000.f);
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(-80, 6400, -5);
+        glColor3ubv(colorRoad);
+        drawQuad(3.f, 8000.f);
+    glPopMatrix();
+    
+    glPushMatrix();
+        glTranslatef(80, 6400, -5);
+        glColor3ubv(colorRoad);
+        drawQuad(3.f, 8000.f);
+    glPopMatrix();
+
+    // Desenha as faixas
+    for (int i = 0; i < cordYRoad.size(); i++)
+    {
+        glPushMatrix();
+            glTranslatef(0, cordYRoad[i], -5);
+            glColor3ubv(colorRoad);
+            drawQuad(3.f, 100.f);
+        glPopMatrix();
+    }
+}
+
+// Desenha quadrados
+void RetroRoad::drawQuad(float x, float y)
+{
+    glBegin(GL_QUADS);
+        glVertex3f( x, -y, 0);
+        glVertex3f( x,  y, 0);
+        glVertex3f(-x,  y, 0);
+        glVertex3f(-x, -y, 0);
+    glEnd();
+}
+
+// Desenha o campo e as montanhas
+void RetroRoad::drawMountains(int mode, GLubyte color[3])
+{
     glPolygonMode(GL_FRONT_AND_BACK, mode);
 
-    // Desenha o campo e as montanhas
     for (int i = -1; i <= 1; i += 2)
     {
         glPushMatrix();
             glTranslatef(83 * i, 0, -6.7);
             glColor3ubv(color);
-            for (int j = 0; j < (cordY.size() - 1); j++)
+            for (int j = 0; j < (cordYField.size() - 1); j++)
             {
                 glBegin(GL_QUAD_STRIP);
                 for (int k = 0; k < 30; k++)
                 {
-                    if(cordY[j] <= 14000)
+                    if(cordYField[j] <= 14000)
                     {
-                        glVertex3f(k * 20 * i,     cordY[j],     cordZRight[j][k]);
-                        glVertex3f(k * 20 * i, cordY[j + 1], cordZRight[j + 1][k]);   
+                        glVertex3f(k * 20 * i,     cordYField[j],     cordZRight[j][k]);
+                        glVertex3f(k * 20 * i, cordYField[j + 1], cordZRight[j + 1][k]);   
                     }    
                     else
                     {
-                        glVertex3f(k * 20 * i,     cordY[j],     cordZRight[j][k] - (cordY[j]-14000)/100);
-                        glVertex3f(k * 20 * i, cordY[j + 1], cordZRight[j + 1][k] - (cordY[j]-14000)/100);
+                        glVertex3f(k * 20 * i,     cordYField[j],     cordZRight[j][k] - (cordYField[j]-14000)/100);
+                        glVertex3f(k * 20 * i, cordYField[j + 1], cordZRight[j + 1][k] - (cordYField[j]-14000)/100);
                     }
                 }
                 glEnd();
@@ -59,12 +106,14 @@ void Field::drawMountains(int mode, GLubyte color[3])
 }
 
 // Desenha as arvores
-void Field::drawTrees()
+void RetroRoad::drawTrees()
 {
     for (int i = 0; i < treesLeft.size(); i++)
     {
         glPushMatrix();
-            glTranslatef( treesLeft[i].getCordTree().x, treesLeft[i].getCordTree().y, treesLeft[i].getCordTree().z-6.7);
+            glTranslatef(   treesLeft[i].getCordTree().x, 
+                            treesLeft[i].getCordTree().y, 
+                            treesLeft[i].getCordTree().z-6.7);
             treesLeft[i].draw();
         glPopMatrix();
     }
@@ -72,7 +121,9 @@ void Field::drawTrees()
     for (int i = 0; i < treesRight.size(); i++)
     {    
         glPushMatrix();
-            glTranslatef( treesRight[i].getCordTree().x, treesRight[i].getCordTree().y, treesRight[i].getCordTree().z-6.7);
+            glTranslatef(   treesRight[i].getCordTree().x, 
+                            treesRight[i].getCordTree().y, 
+                            treesRight[i].getCordTree().z-6.7);
             glRotatef(180, 0, 0, 1);
             treesRight[i].draw();
         glPopMatrix();
@@ -97,17 +148,29 @@ void drawTunnel(int mode, GLubyte color[3])
 }
 
 // Função para atualizar as variaveis com base na velocidade
-void Field::updField(float speed)
-{
-    // Atualiza as coordenadas das linhas e montanhas
-    for (int i = 0; i < cordY.size(); i++)
+void RetroRoad::updRoad(float speed)
+{  
+    // Atualiza as linhas
+    for (int i = 0; i < cordYRoad.size(); i++)
     {
-        cordY[i] -= speed;
- 
-        if (cordY[i] < -400.f)
+        cordYRoad[i] -= speed;
+        if (cordYRoad[i] < -200.f)
         {
-            cordY.push_back(cordY[i] + (cordY.size() * 200));
-            cordY.pop_front();
+            cordYRoad.push_back(cordYRoad[i] + (cordYRoad.size() * 500.f));
+            cordYRoad.pop_front();
+            i--;
+        }
+    } 
+
+    // Atualiza as coordenadas das linhas e montanhas
+    for (int i = 0; i < cordYField.size(); i++)
+    {
+        cordYField[i] -= speed;
+ 
+        if (cordYField[i] < -400.f)
+        {
+            cordYField.push_back(cordYField[i] + (cordYField.size() * 200));
+            cordYField.pop_front();
             i--;
             cordZRight.pop_front();
             cordZLeft.pop_front();
@@ -166,35 +229,99 @@ void Field::updField(float speed)
     }
 }
 
-// Função para iniciar todas as filas;
-void Field::initQueues()
+int RetroRoad::updEnemy(float time, Driver &player)
 {
-    for (float i = 0; i <= 180; i++)
+    if(enemy.getCarPos().y < -10000)
     {
-        cordY.push_back(i*200);
+        enemy.setCarPosY(enemy.getCarPos().y + enemy.getSpeed() - player.getSpeed());
+        player.setCarPosY(player.getCarPos().y + player.getSpeed());
+        
+        if(player.getCarPos().y > 20000)
+        {
+            player.setCarPos(vec3(player.getCarPos().x,0,0));
+            enemy.setCarPos(vec3(300,0,0));
+            return 2;
+        }
+        else if(player.getCarPos().y > 14000)
+        {
+            player.setCarPosZ(-(player.getCarPos().y - 14000) /100);
+        }
+    }
+    else if(enemy.getCarPos().y+30 < player.getCarPos().x-30)
+    {
+        enemy.slowDown(time);
+        enemy.setCarPosY(enemy.getCarPos().y + enemy.getSpeed() - player.getSpeed());
+    }
+    else if(enemy.getCarPos().y < 14000)
+    {
+        enemy.speedUp(time);
+        enemy.setCarPosY(enemy.getCarPos().y + enemy.getSpeed() - player.getSpeed());
+        if( player.getCarPos().y+30 < enemy.getCarPos().y-30 
+            && player.getCarPos().y+30 < enemy.getCarPos().y-30-player.getSpeed())
+        {
+            enemy.turn(0);
+            if(player.getCarPos().x+15 < enemy.getCarPos().x+10) enemy.turn(-1);
+            if(player.getCarPos().x-15 > enemy.getCarPos().x-10) enemy.turn( 1);   
+
+            enemy.setCarPosX(enemy.getCarPos().x + (enemy.getSpeed() * enemy.getDirection())/100); 
+            if(enemy.getCarPos().x >  60.f) enemy.setCarPosX( 60.f);
+            if(enemy.getCarPos().x < -60.f) enemy.setCarPosX(-60.f);
+        }
+        else 
+        {
+            if( player.getCarPos().x+15 > enemy.getCarPos().x 
+                && player.getCarPos().x-15 < enemy.getCarPos().x)
+            { 
+                return 1;
+            }
+        }   
+    }
+    else 
+    {
+        enemy.setCarPosZ(-(enemy.getCarPos().y-14000)/100);
+        enemy.brake(time);   
+        enemy.setCarPosY(enemy.getCarPos().y + enemy.getSpeed() - player.getSpeed());
+    }
+    return 0;
+}
+
+// Função para iniciar todas as filas;
+void RetroRoad::initQueues()
+{
+    for (int i = 0; i < 30; i++)
+    {
+        cordYRoad.push_back(i * 500.f);
+    }
+
+    for (int i = 0; i <= 180; i++)
+    {
+        cordYField.push_back(i*200);
         cordZRight.push_back(randMountain());
         cordZLeft.push_back(randMountain());   
     }
 
     treesRight.push_back(Tree(colorBG, vec3(rand()%100+100, 2000 + (rand() % 1000 - 500),-6.7f)));
-    treesLeft.push_back(Tree(colorBG, vec3((rand()%100+100)*-1, 2000 +(rand() % 1000 - 500),-6.7f)));
 
     for (int i = 0; treesRight.back().getCordTree().y < 36000; i++)
     {
         treesRight.push_back(Tree(colorBG, vec3(rand()%100+200, 
                                                     treesRight[i].getCordTree().y + 2000 + (rand() % 1000 - 500),
                                                     0)));
+        
         if(treesRight.back().getCordTree().y > 14000)
         {
             treesRight.back().setCordZTree(-(treesRight.back().getCordTree().y-14000)/100);
         }
     }
     
+    treesLeft.push_back(Tree(colorBG, vec3((rand()%100+100)*-1, 2000 +(rand() % 1000 - 500),-6.7f)));
+    
     for (int i = 0; treesLeft.back().getCordTree().y < 36000; i++)
     {   
         treesLeft.push_back(Tree(colorBG, vec3((rand() % 100 + 200) * -1,
                                                    treesLeft[i].getCordTree().y + 2000 + (rand() % 1000 - 500),
                                                    0)));
+        
         if(treesLeft.back().getCordTree().y > 14000)
         {
             treesLeft.back().setCordZTree(-(treesLeft.back().getCordTree().y-14000)/100);
@@ -203,7 +330,7 @@ void Field::initQueues()
 }
 
 // Função para gerar deformidade das montanhas
-vector<int> Field::randMountain()
+vector<int> RetroRoad::randMountain()
 {
     vector<int> aux;
     for (int j = 0; j < 30; j++)

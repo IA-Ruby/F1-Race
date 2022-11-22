@@ -1,13 +1,7 @@
 #include "../header/horizon.h"
 
-#include <GL/gl.h>
-#include <math.h>
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-Horizon::Horizon(GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorStars[3], GLubyte colorBG[3], glm::vec3 sunPos, float scale, bool lines, bool city)
+Horizon::Horizon(   GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorStars[3], GLubyte colorBG[3], 
+                    vec3 sunPos, float scale)
 {
     for (int i = 0; i < 3; i++)
     {
@@ -34,7 +28,7 @@ Horizon::Horizon(GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorStars[
     }
 }
 
-void Horizon::draw(glm::vec3 camPos)
+void Horizon::draw(vec3 camPos, bool lines, bool city)
 {
     // Gambiara com canculo de tangente inversa pra fazer o Sol alinhar com a câmera
     rotCam = 90 + (90 - (atan(sunPos.y + camPos.y / sunPos.z + camPos.z) * (180 / M_PI)));
@@ -57,7 +51,7 @@ void Horizon::draw(glm::vec3 camPos)
 void Horizon::drawStars()
 {
     glPushMatrix();
-        glTranslatef(sunPos.x, sunPos.y + 100, sunPos.z);
+        glTranslatef(sunPos.x, sunPos.y + 100, scale);
         glRotatef(rotCam, 1, 0, 0); // Rotaciona para ficar alinhado com a câmera
         glColor3ubv(colorStars);
         

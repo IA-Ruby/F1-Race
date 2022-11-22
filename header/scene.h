@@ -1,41 +1,51 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "driver.h"
+#include "camera.h"
 #include "horizon.h"
-#include "road.h"
-#include "field.h"
+#include "retroRoad.h"
 #include "finalRoad.h"
 #include "trainTunnel.h"
 #include "funnyTunnel.h"
+#include "spiral.h"
 
+#include "../src/driver.cpp"
+#include "../src/camera.cpp"
 #include "../src/horizon.cpp"
-#include "../src/road.cpp"
-#include "../src/field.cpp"
+#include "../src/retroRoad.cpp"
 #include "../src/finalRoad.cpp"
 #include "../src/trainTunnel.cpp"
 #include "../src/funnyTunnel.cpp"
-
-using namespace glm;
+#include "../src/spiral.cpp"
 
 class Scene
 {
     private:
-        Horizon horizon;
-        Field field;
-        Road road;
-        FinalRoad final;
-        Horizon finalHorizon;
+        Camera camera;
+        Driver player;
+        Horizon horizon, finalHorizon;
+        RetroRoad retroRoad;
         TrainTunnel trainTunnel;
         FunnyTunnel funnyTunnel;
-        float finish;
-        int number;
-        bool moveCar;
-        void changeScene(float speed);
-    
+        Spiral spiral;
+        FinalRoad final;
+        int scene = 1;
+        void setCamera(vec3 camPos, vec3 lookAt);
+        void updEnemy(float time);
+
     public:
-        Scene(GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorField[3], GLubyte colorBG[3], GLubyte colorRoad[3]);
-        void draw(int number, float speed, float turn, vec3 camPos);
-        bool carShouldMove();        
+        Scene(GLubyte colorCar[3],
+              GLubyte colorSun[3],
+              GLubyte colorLight[3],
+              GLubyte colorField[3],
+              GLubyte colorBG[3],
+              GLubyte colorRoad[3],
+              int texId);
+
+        void draw(float time);
+        void manageEvents(float time, bool acl, bool nitro, bool brake, int direction);
+        void setScene(int scene);
 };
 
 #endif

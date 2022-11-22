@@ -1,10 +1,4 @@
 #include "../header/trainTunnel.h"
-#include <GL/gl.h>
-#include <math.h>
-
-#ifndef M_PI
-    #define M_PI 3.14159265358979323846
-#endif
 
 TrainTunnel::TrainTunnel(GLubyte colorRoad[3], GLubyte colorWall[3], GLubyte colorBG[3])
 {
@@ -15,14 +9,17 @@ TrainTunnel::TrainTunnel(GLubyte colorRoad[3], GLubyte colorWall[3], GLubyte col
         this->colorBG[i] = colorBG[i];
     }
     
-    for (int i = -2; i < 40; i++)
+    for (int i = -2; i < 300; i++)
     {
         cordY.push_back(i * 400);
     }
+
+    trainPos = cordY.back();
 }
 
 void TrainTunnel::draw(float speed)
 {
+    drawTrain(speed);
     updTunnel(speed);
     drawMode(GL_LINE, colorRoad, colorWall);
     drawMode(GL_FILL, colorBG, colorBG);
@@ -31,7 +28,6 @@ void TrainTunnel::draw(float speed)
 void TrainTunnel::drawMode(int mode, GLubyte color1[3], GLubyte color2[3])
 {
     glPolygonMode(GL_FRONT_AND_BACK, mode);
-    // desenha kapa
     glPushMatrix();
         glTranslatef(0, 0, -5.1);
         for (int i = 0; i < cordY.size() - 1; i++)
@@ -61,8 +57,22 @@ void TrainTunnel::drawMode(int mode, GLubyte color1[3], GLubyte color2[3])
     glPopMatrix();
 }
 
+void TrainTunnel::drawTrain(float speed)
+{
+    glColor3f(1,1,1);
+    glBegin(GL_QUADS);
+        glVertex3f( -20, trainPos, 0);
+        glVertex3f(  20, trainPos, 0);
+        glVertex3f(  20, trainPos, 40);
+        glVertex3f( -20, trainPos, 40);
+    glEnd();   
+}
+
 void TrainTunnel::updTunnel(float speed)
 {
+    if(distance > 4000) trainPos -= 300 + speed;
+    else distance += speed;
+
     for (int i = 0; i < cordY.size(); i++)
     {
         cordY[i] -= speed;
@@ -73,4 +83,9 @@ void TrainTunnel::updTunnel(float speed)
             i--;
         }
     }
+}
+
+float TrainTunnel::getTrainPos()
+{
+    return trainPos;
 }

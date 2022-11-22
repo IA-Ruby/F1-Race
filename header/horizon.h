@@ -1,11 +1,15 @@
 #ifndef HORIZON_H
 #define HORIZON_H
 
+#include <GL/glu.h>
 #include "../glm/vec3.hpp"
 #include <deque>
 #include <vector>
 
+#define M_PI 3.14159265358979323846
+
 using namespace std;
+using namespace glm;
 
 class Horizon
 {
@@ -14,8 +18,8 @@ class Horizon
         GLubyte colorLight[3];
         GLubyte colorStars[3];
         GLubyte colorBG[3];
-        glm::vec3 sunPos;
-        vector<glm::vec3> starCord;
+        vec3 sunPos;
+        vector<vec3> starCord;
         float scale;
         float rotCam;
         bool lines;
@@ -33,12 +37,10 @@ class Horizon
                 GLubyte colorLight[3],
                 GLubyte colorStars[3],
                 GLubyte colorBG[3],
-                glm::vec3 sunPos,
-                float scale,
-                bool lines,
-                bool city);
+                vec3 sunPos,
+                float scale);
                 
-        void draw(glm::vec3 camPos);    
+        void draw(vec3 camPos, bool lines, bool city);    
 };
 
 #endif

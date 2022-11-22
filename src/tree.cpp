@@ -1,10 +1,4 @@
 #include "../header/tree.h"
-#include <GL/gl.h>
-#include <math.h>
-
-#ifndef M_PI
-    #define M_PI 3.14159265358979323846
-#endif
 
 Tree::Tree(GLubyte colorTree[3], vec3 cordTree)
 {

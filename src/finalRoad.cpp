@@ -1,5 +1,4 @@
 #include "../header/finalRoad.h"
-#include <GL/gl.h>
 
 FinalRoad::FinalRoad(GLubyte colorRoad[3], GLubyte colorBG[3])
 {
@@ -12,14 +11,13 @@ FinalRoad::FinalRoad(GLubyte colorRoad[3], GLubyte colorBG[3])
     {
         if (i <= 50)
             cordX.push_back(i * 20);
-        if (i >= 0)
+        if (i >= -1)
             cordY.push_back(i * 200);
     }
 }
 
-void FinalRoad::draw(float speed)
+void FinalRoad::draw()
 {
-    updRoad(speed);
     drawMode(GL_LINE, colorRoad);
     drawMode(GL_FILL, colorBG);
 }
@@ -41,18 +39,4 @@ void FinalRoad::drawMode(int mode, GLubyte color[3])
             glEnd();
         }
     glPopMatrix();
-}
-
-void FinalRoad::updRoad(float speed)
-{
-    for (int i = 0; i < cordY.size(); i++)
-    {
-        cordY[i] -= speed;
-        if (cordY[i] < -400.f)
-        {
-            cordY.push_back(cordY[i] + (cordY.size() * 200));
-            cordY.pop_front();
-            i--;
-        }
-    }
 }
