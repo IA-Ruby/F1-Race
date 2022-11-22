@@ -8,17 +8,6 @@ Camera::Camera()
     this->camTop = vec3(0,0,1);
 }
 
-void Camera::rotateCam(float amount, vec3 axis)
-{
-    // Model = rotate(mat4(1.0f), radians(amount), axis);
-}
-
-void Camera::translateCam(vec3 camPos)
-{
-    this->camPos += camPos;
-    this->camLookAt += camPos;
-}
-
 void Camera::setCamPos(vec3 camPos)
 {
     this->camPos = camPos;
