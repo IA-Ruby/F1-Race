@@ -1,16 +1,13 @@
-all: compile link exec
+all: compile link execute
 
 compile: 
-	g++ -c main.cpp -I"C:\Users\gusta\Documents\libraries\SFML-2.5.1\include" -DSFML_STATIC
+	g++ -c main.cpp -I"..\include" -DSFML_STATIC
 
 link: 
-	g++ main.o -o main -L"C:\Users\gusta\Documents\libraries\SFML-2.5.1\lib" -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-system-s -lopengl32 -lfreetype -lwinmm -lgdi32 -mwindows -lsfml-main
+	g++ main.o -o main -L"..\lib" -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-system-s -lopengl32 -lfreetype -lwinmm -lgdi32 -mwindows -lsfml-main
 
 execute:
 	./main
 
 clean: 
 	rm -f main *.o
-
-exec:
-	.\main.exe

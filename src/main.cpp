@@ -1,6 +1,6 @@
 // Alunos:  Francisco Eudes Mendes Filho - 470641
-//          Luis Gustavo Giraum - 000024
-//          Lamec               - :#&?@!
+//          Luis Gustavo Girão Cardial - 471737
+//          Lamec               - 473547
 
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Event.hpp>
