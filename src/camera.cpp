@@ -1,35 +1,45 @@
 #include "../header/camera.h"
-#include <GL/gl.h>
 
-Camera::Camera(vec3 camPos, vec3 camLookAt, vec3 camTop){
-    this->camPos = camPos;
-    this->camLookAt = camLookAt;
-    this->camTop = camTop; 
+Camera::Camera()
+{
+    mat4 Model(1.0f);
+    this->camPos = vec3(0,0,0);
+    this->camLookAt = vec3(0,0,0);
+    this->camTop = vec3(0,0,1);
 }
 
-void Camera::rotateCam(float amount, vec3 axis){
-    // camLookAt = rotate(camLookAt, amount, axis);
-    // n funciona ;-;
-}
-
-void Camera::translateCam(vec3 camPos){
-    this->camPos += camPos;
-    this->camLookAt += camPos;
-}
-
-void Camera::setCamPos(vec3 camPos){
+void Camera::setCamPos(vec3 camPos)
+{
     this->camPos = camPos;
 }
 
-void Camera::setCamLookAt(vec3 camLookAt){
+void Camera::setCamPosX(float camPos)
+{
+    this->camPos.x = camPos;
+}
+
+void Camera::setCamPosY(float camPos)
+{
+    this->camPos.y = camPos;
+}
+
+void Camera::setCamPosZ(float camPos)
+{
+    this->camPos.z = camPos;
+}
+
+void Camera::setCamLookAt(vec3 camLookAt)
+{
     this->camLookAt = camLookAt;
 }
 
-mat4 Camera::getCamera(){
-    mat4 camView = lookAt(camPos, vec3(camLookAt), vec3(camTop));
+mat4 Camera::getCamera()
+{
+    mat4 camView = lookAt(camPos, camLookAt, camTop);
     return camView;
 }
 
-vec3 Camera::getCamPos(){
+vec3 Camera::getCamPos()
+{
     return camPos;
 }

@@ -1,13 +1,25 @@
 #ifndef SPIRAL_H
 #define SPIRAL_H
 
-class Spiral{
+#include <GL/glu.h>
+#include <deque>
+#include <math.h>
+
+#define M_PI 3.14159265358979323846
+
+class Spiral
+{
     private:
         GLubyte colorRoad[3];
         GLubyte colorBG[3];
+        deque<float> cordY;
+        float auxRot = 0;
+        void updSpiral(float speed);
+        void drawMode(int mode, GLubyte color[3]);    
+
     public:
-        Spiral();
-        
+        Spiral(GLubyte colorRoad[3], GLubyte colorBG[3]);        
+        void draw(float speed);
 };
 
 #endif
