@@ -2,19 +2,22 @@
 //          Luis Gustavo Girão Cardial - 471737
 //          Lamec               - 473547
 
+#include <GL/glew.h>
+
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Window.hpp>
-#include <SFML/OpenGL.hpp>
 
 #include "time.h"
 #include "scene.cpp"
+#include "shader.cpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../header/stb_image.h"
 
 int main(){
 
+    glewInit();
     stbi_set_flip_vertically_on_load(true);
     
     int width, height, nrChannels;
