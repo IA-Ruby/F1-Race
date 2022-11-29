@@ -16,8 +16,6 @@
 #include "../header/stb_image.h"
 
 int main(){
-
-    glewInit();
     stbi_set_flip_vertically_on_load(true);
     
     int width, height, nrChannels;
@@ -58,6 +56,15 @@ int main(){
     contextSettings.stencilBits = 1;       
     
     sf::Window window(sf::VideoMode(900, 600), "Synthwave Race",  sf::Style::Fullscreen, contextSettings);
+
+    GLenum err = glewInit();
+
+    if (GLEW_OK != err)
+    {
+        FILE* outfile = fopen("log.txt","w");
+        fprintf(outfile, "Error: %s\n", glewGetErrorString(err));
+        exit(1);
+    }
 
     window.setFramerateLimit(60);
     window.setActive();
