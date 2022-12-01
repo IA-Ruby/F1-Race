@@ -7,7 +7,6 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Window.hpp>
-#include <SFML/Graphics.hpp>
 
 #include "time.h"
 #include "scene.cpp"
@@ -47,12 +46,8 @@ int main(){
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-        
-        sf::Texture texture;
-        texture.loadFromFile("car.jpg");
-        texture.setSmooth(true);
 
-        Scene scene(colorCar, colorSun, colorLight, colorField, colorBG, colorRoad, 0);
+        Scene scene(colorCar, colorSun, colorLight, colorField, colorBG, colorRoad);
 
         window.setFramerateLimit(60);
         window.setActive();

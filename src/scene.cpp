@@ -1,13 +1,14 @@
 #include "../header/scene.h"
 
 Scene::Scene(   GLubyte colorCar[3], GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorField[3], 
-                GLubyte colorBG[3], GLubyte colorRoad[3], int texId)
+                GLubyte colorBG[3], GLubyte colorRoad[3])
 :
     camera(),
-    player( colorBG, colorCar, vec3(0,0,0), 200, texId),
+    textures(),
+    player( colorBG, colorCar, vec3(0,0,0), 200, textures.getTextureAddress(TEX_CAR)),
     
     //Scene 1
-    retroRoad( colorRoad, colorField, colorBG, texId),
+    retroRoad( colorRoad, colorField, colorBG, textures.getTextureAddress(TEX_CAR)),
     horizon( colorSun, colorLight, colorField, colorBG, vec3(0,39000,2000), 1800.f),
 
     //Scene 2

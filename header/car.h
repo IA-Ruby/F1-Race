@@ -1,6 +1,7 @@
 #ifndef CAR_H
 #define CAR_H
 
+#include <SFML/Graphics.hpp>
 #include <GL/glu.h>
 #include "../glm/vec3.hpp"
 #include <math.h>
@@ -22,13 +23,13 @@ class Car
         float wheelRot = 0;
         float angle = 0; 
         int direction = 0;
-        int texId;
+        sf::Texture* texAddress;
         void drawMode(int mode, GLubyte color[3]);
         void drawWheel(float radius, float width);
         void drawQuadStrip(float radius1, float radius2, float widht1, float witdh2);
         
     public:
-        Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 carPos, float maxSpeed, int texId);
+        Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 carPos, float maxSpeed, sf::Texture* texAddress);
         void draw();
         void colision(int type);
         float getSpeed();

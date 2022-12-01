@@ -1,6 +1,6 @@
 #include "../header/car.h"
 
-Car::Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 pos, float maxSpeed, int texId)
+Car::Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 pos, float maxSpeed, sf::Texture* texAddress)
 {
     for(int i=0; i<3; i++)
     {
@@ -8,7 +8,7 @@ Car::Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 pos, float maxSpeed,
         this->colorOutline[i] = colorOutline[i];
     }
     this->carPos = pos;
-    this->texId = texId;
+    this->texAddress = texAddress;
     this->maxSpeed = maxSpeed;
 }
 
@@ -191,14 +191,14 @@ void Car::drawMode(int mode, GLubyte color[3])
        
         //  Laterais
             //  Tras
-            glBindTexture(GL_TEXTURE_2D, texId);
+            sf::Texture::bind(texAddress);
             glBegin(GL_QUADS);
                 glTexCoord2f(1,0);  glVertex3f(  maxX,  lowY, lowZ);
                 glTexCoord2f(1,1);  glVertex3f(  maxX,  lowY, medZ);
                 glTexCoord2f(0,1);  glVertex3f( -maxX,  lowY, medZ);
                 glTexCoord2f(0,0);  glVertex3f( -maxX,  lowY, lowZ);
             glEnd();
-            glBindTexture(GL_TEXTURE_2D, 0);
+            sf::Texture::bind(NULL);
         
             //  Frente
             glBegin(GL_QUADS);  glVertex3f(  maxX,  maxY, lowZ);

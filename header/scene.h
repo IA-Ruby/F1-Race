@@ -18,6 +18,7 @@
 #include "../src/trainTunnel.cpp"
 #include "../src/funnyTunnel.cpp"
 #include "../src/spiral.cpp"
+#include "../src/textures.cpp"
 
 class Scene
 {
@@ -35,13 +36,13 @@ class Scene
         void updEnemy(float time);
 
     public:
+        Textures textures;
         Scene(GLubyte colorCar[3],
               GLubyte colorSun[3],
               GLubyte colorLight[3],
               GLubyte colorField[3],
               GLubyte colorBG[3],
-              GLubyte colorRoad[3],
-              int texId);
+              GLubyte colorRoad[3]);
 
         void draw(float time);
         void manageEvents(float time, bool acl, bool nitro, bool brake, int direction);
