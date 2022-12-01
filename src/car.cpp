@@ -192,11 +192,11 @@ void Car::drawMode(int mode, GLubyte color[3])
         //  Laterais
             //  Tras
             glBindTexture(GL_TEXTURE_2D, texId);
-            glBegin(GL_QUADS);  
-                glTexCoord2f(1,0);  glVertex3f(  maxX,  lowY, lowZ);        
-                glTexCoord2f(1,1);  glVertex3f(  maxX,  lowY, medZ);          
-                glTexCoord2f(0,1);  glVertex3f( -maxX,  lowY, medZ);    
-                glTexCoord2f(0,0);  glVertex3f( -maxX,  lowY, lowZ);    
+            glBegin(GL_QUADS);
+                glTexCoord2f(1,0);  glVertex3f(  maxX,  lowY, lowZ);
+                glTexCoord2f(1,1);  glVertex3f(  maxX,  lowY, medZ);
+                glTexCoord2f(0,1);  glVertex3f( -maxX,  lowY, medZ);
+                glTexCoord2f(0,0);  glVertex3f( -maxX,  lowY, lowZ);
             glEnd();
             glBindTexture(GL_TEXTURE_2D, 0);
         
