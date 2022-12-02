@@ -2,9 +2,10 @@
 #define TRAINTUNNEL_H
 
 #include <GL/glu.h>
-#include "../glm/vec3.hpp"
 #include <deque>
 #include <math.h>
+#include "../glm/vec3.hpp"
+#include "textures.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -19,12 +20,13 @@ class TrainTunnel
         GLubyte colorRoad[3];
         GLubyte colorWall[3];
         GLubyte colorBG[3];
+        Textures* textures;
         void updTunnel(float speed);
         void drawMode(int mode, GLubyte color1[3], GLubyte color2[3]);
         void drawTrain(float speed);
         
     public:
-        TrainTunnel(GLubyte colorRoad[3], GLubyte colorWall[3], GLubyte colorBG[3]);
+        TrainTunnel(GLubyte colorRoad[3], GLubyte colorWall[3], GLubyte colorBG[3], Textures* textures);
         void draw(float speed);
         float getTrainPos();
 };

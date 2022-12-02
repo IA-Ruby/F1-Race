@@ -1,8 +1,8 @@
 #include "../header/retroRoad.h"
 
-RetroRoad::RetroRoad(GLubyte colorRoad[3], GLubyte colorField[3], GLubyte colorBG[3], sf::Texture* texAddress)
+RetroRoad::RetroRoad(GLubyte colorRoad[3], GLubyte colorField[3], GLubyte colorBG[3], Textures* textures)
 :
-    enemy( colorBG, colorRoad, vec3(0,600,0), 150, texAddress)
+    enemy( colorBG, colorRoad, vec3(0,600,0), 150, textures)
 {
     for (int i = 0; i < 3; i++)
     {

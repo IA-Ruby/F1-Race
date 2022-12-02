@@ -5,14 +5,14 @@ Scene::Scene(   GLubyte colorCar[3], GLubyte colorSun[3], GLubyte colorLight[3],
 :
     camera(),
     textures(),
-    player( colorBG, colorCar, vec3(0,0,0), 200, textures.getTextureAddress(TEX_CAR)),
+    player( colorBG, colorCar, vec3(0,0,0), 200, &textures),
     
     //Scene 1
-    retroRoad( colorRoad, colorField, colorBG, textures.getTextureAddress(TEX_CAR)),
+    retroRoad( colorRoad, colorField, colorBG, &textures),
     horizon( colorSun, colorLight, colorField, colorBG, vec3(0,39000,2000), 1800.f),
 
     //Scene 2
-    trainTunnel( colorSun, colorField, colorBG),
+    trainTunnel( colorSun, colorField, colorBG, &textures),
     
     //Scene 3
     funnyTunnel( colorSun, colorField, colorLight, colorBG),

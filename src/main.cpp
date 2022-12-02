@@ -37,16 +37,6 @@ int main(){
         GLenum err = glewInit();
         if (GLEW_OK != err) throw glewGetErrorString(err);
 
-        glEnable(GL_TEXTURE_2D);
-
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMPILE);
-        
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-
         Scene scene(colorCar, colorSun, colorLight, colorField, colorBG, colorRoad);
 
         window.setFramerateLimit(60);
@@ -111,6 +101,12 @@ int main(){
 
             window.display();
         }
+    }
+    catch (const string ex)
+    {
+        FILE* outfile = fopen("log.txt","w");
+        fprintf(outfile, "Error: %s\n", ex);
+        exit(1);
     }
     catch (const char* ex)
     {

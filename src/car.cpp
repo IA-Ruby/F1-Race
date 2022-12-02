@@ -1,6 +1,6 @@
 #include "../header/car.h"
 
-Car::Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 pos, float maxSpeed, sf::Texture* texAddress)
+Car::Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 pos, float maxSpeed, Textures* textures)
 {
     for(int i=0; i<3; i++)
     {
@@ -8,7 +8,7 @@ Car::Car(GLubyte colorCar[3], GLubyte colorOutline[3], vec3 pos, float maxSpeed,
         this->colorOutline[i] = colorOutline[i];
     }
     this->carPos = pos;
-    this->texAddress = texAddress;
+    this->textures = textures;
     this->maxSpeed = maxSpeed;
 }
 
@@ -191,14 +191,14 @@ void Car::drawMode(int mode, GLubyte color[3])
        
         //  Laterais
             //  Tras
-            sf::Texture::bind(texAddress);
+            textures->bind(TEX_CAR);
             glBegin(GL_QUADS);
-                glTexCoord2f(1,0);  glVertex3f(  maxX,  lowY, lowZ);
-                glTexCoord2f(1,1);  glVertex3f(  maxX,  lowY, medZ);
-                glTexCoord2f(0,1);  glVertex3f( -maxX,  lowY, medZ);
-                glTexCoord2f(0,0);  glVertex3f( -maxX,  lowY, lowZ);
+                glTexCoord2f(1,0); glVertex3f(  maxX,  lowY, lowZ);
+                glTexCoord2f(1,1); glVertex3f(  maxX,  lowY, medZ);
+                glTexCoord2f(0,1); glVertex3f( -maxX,  lowY, medZ);
+                glTexCoord2f(0,0); glVertex3f( -maxX,  lowY, lowZ);
             glEnd();
-            sf::Texture::bind(NULL);
+            textures->unbind();
         
             //  Frente
             glBegin(GL_QUADS);  glVertex3f(  maxX,  maxY, lowZ);

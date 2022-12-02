@@ -33,7 +33,7 @@ class RetroRoad
         vector<int> randMountain();
     
     public:
-        RetroRoad( GLubyte colorRoad[3], GLubyte colorField[3], GLubyte colorBack[3], sf::Texture* texAddress);
+        RetroRoad( GLubyte colorRoad[3], GLubyte colorField[3], GLubyte colorBack[3], Textures* textures);
         void draw(float speed);
         int updEnemy(float time, Driver &player);
 };
