@@ -10,7 +10,7 @@
 
 #include "time.h"
 #include "scene.cpp"
-#include "shader.cpp"
+#include "../header/shader.h"
 
 int main(){
     try
@@ -36,6 +36,8 @@ int main(){
 
         GLenum err = glewInit();
         if (GLEW_OK != err) throw glewGetErrorString(err);
+
+        Shader mainShader("vertexShader.vert", "fragmentShader.frag");
 
         Scene scene(colorCar, colorSun, colorLight, colorField, colorBG, colorRoad);
 
