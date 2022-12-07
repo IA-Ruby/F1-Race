@@ -33,6 +33,7 @@ void RetroRoad::draw(float speed)
 // Desenha a pista
 void RetroRoad::drawRoad()
 {
+    glNormal3f(0, 0, 1);
     glPushMatrix();
         glTranslatef(0, 6400, -5.1);
         glColor3ubv(colorBG);

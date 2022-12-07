@@ -1,17 +1,13 @@
-//varying é a instrução indicando que essas variáveis serão enviadas ao fragment shader
-//seus conteúdos são por vértice e serão interpoladas linearmente para cada fragmento
-//pos este motivo, seus valores não serão exatamente iguais no fragment shader
-varying vec3 posicao;
-varying vec3 minhaNormal;
-varying vec3 color;
+#version 330 core
+out vec3 FragPos;
+out vec3 normal;
+out vec3 color;
 
-//todo shader precisa de ao menos uma função main()
 void main(void){
-    posicao      = vec3(gl_Vertex); //pegando o valor enviado através do comando glVertex3f()
-    minhaNormal  = gl_Normal;       //pegando o valor enviado através do comando glNormal3f()
-    color        = gl_Color;        //pegando o valor enviado através do comando glColor3f()
+    normal      = mat3(transpose(inverse(mat4(1.0)))) * gl_Normal;
+    color       = vec3(gl_Color);
+    
+    FragPos = vec3(mat4(1.0) * gl_Vertex);
 
-    //gl_Position é a variavel interna do OpenGL que deve receber a posição do vértice após todas as transformações geométricas (locais, câmera e projeção)
-    //a variavel gl_ModelViewProjectionMatrix armazena a combinação de todas as matrizes definidas no seu código
     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 }

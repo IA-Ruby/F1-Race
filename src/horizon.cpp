@@ -30,7 +30,7 @@ Horizon::Horizon(   GLubyte colorSun[3], GLubyte colorLight[3], GLubyte colorSta
 
 void Horizon::draw(vec3 camPos, bool lines, bool city)
 {
-    // Gambiara com canculo de tangente inversa pra fazer o Sol alinhar com a câmera
+    // Gambiara com calculo de tangente inversa pra fazer o Sol alinhar com a câmera
     rotCam = 90 + (90 - (atan(sunPos.y + camPos.y / sunPos.z + camPos.z) * (180 / M_PI)));
     this->sunPos.x = camPos.x;
     drawStars();

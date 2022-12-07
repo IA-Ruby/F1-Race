@@ -22,7 +22,7 @@ int main(){
         GLubyte colorLight[]   = {246, 44, 180};
         GLubyte colorSun[]     = {255, 225, 131};
         GLubyte colorLeaves[]  = {0, 255, 0};
-        GLubyte colorWood[]    = {150, 100, 100};    
+        GLubyte colorWood[]    = {150, 100, 100};
 
         sf::Time frameTime{sf::Time::Zero};
         sf::Clock clock;
@@ -37,8 +37,8 @@ int main(){
         GLenum err = glewInit();
         if (GLEW_OK != err) throw glewGetErrorString(err);
 
-        Shader mainShader("vertexShader.vert", "fragmentShader.frag");
-
+        Shader lightShader("vertexShader.vert", "fragmentShader.frag");
+        
         Scene scene(colorCar, colorSun, colorLight, colorField, colorBG, colorRoad);
 
         window.setFramerateLimit(60);
@@ -99,7 +99,7 @@ int main(){
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
             
-            scene.draw(frameTime.asSeconds());
+            scene.draw(frameTime.asSeconds(), lightShader);
 
             window.display();
         }
@@ -114,13 +114,13 @@ int main(){
     {
         FILE* outfile = fopen("log.txt","w");
         fprintf(outfile, "Error: %s\n", ex);
-        exit(1);
+        exit(2); 
     }
     catch (const GLubyte* ex)
     {
         FILE* outfile = fopen("log.txt","w");
         fprintf(outfile, "Error: %s\n", ex);
-        exit(2);
+        exit(3);
     }
     return 0;
 }

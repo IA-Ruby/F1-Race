@@ -9,6 +9,7 @@
 #include "trainTunnel.h"
 #include "funnyTunnel.h"
 #include "spiral.h"
+#include "shader.h"
 
 #include "../src/driver.cpp"
 #include "../src/camera.cpp"
@@ -44,7 +45,7 @@ class Scene
               GLubyte colorBG[3],
               GLubyte colorRoad[3]);
 
-        void draw(float time);
+        void draw(float time, Shader light);
         void manageEvents(float time, bool acl, bool nitro, bool brake, int direction);
         void setScene(int scene);
 };

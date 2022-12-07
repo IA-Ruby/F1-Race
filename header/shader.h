@@ -148,7 +148,9 @@ private:
             if (!success)
             {
                 glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-                throw infoLog;
+                FILE* outfile = fopen("log.txt","w");
+                fprintf(outfile, "Error: %s\n", infoLog);
+                exit(2); 
             }
         }
         else
@@ -157,7 +159,9 @@ private:
             if (!success)
             {
                 glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-                throw infoLog;
+                FILE* outfile = fopen("log.txt","w");
+                fprintf(outfile, "Error: %s\n", infoLog);
+                exit(2);
             }
         }
     }

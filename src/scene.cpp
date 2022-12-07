@@ -25,10 +25,12 @@ Scene::Scene(   GLubyte colorCar[3], GLubyte colorSun[3], GLubyte colorLight[3],
     finalHorizon( colorSun, colorLight, colorField, colorBG, vec3(0,39500,0), 1800.f)    
 {}
 
-void Scene::draw(float time)
+void Scene::draw(float time, Shader light)
 {   
     if (scene == 1) 
-    {   
+    {
+        light.use();
+
         switch(retroRoad.updEnemy(time, player))
         {
             case 1: player.colision(1); break;
@@ -39,14 +41,16 @@ void Scene::draw(float time)
                                 player.getCarPos().y, 
                                 player.getCarPos().z)); 
 
+        light.setVec3("LightPos", 1.0f, 1.0f, 1.0f);
+
         if(player.getCarPos().x >  60.f) player.setCarPosX( 60.f);
         if(player.getCarPos().x < -60.f) player.setCarPosX(-60.f);
 
         setCamera(vec3(player.getCarPos().x, -300, 20), 
                   vec3(player.getCarPos().x, -299, 20));
 
-        horizon.draw(camera.getCamPos(),true, true);
-        
+        light.setVec3("ViewPos", camera.getCamPos());
+
         if(player.getCarPos().y == 0)
         {
             retroRoad.draw(player.getSpeed());
@@ -54,7 +58,10 @@ void Scene::draw(float time)
         else retroRoad.draw(0);
 
         player.draw();
+
+        glUseProgram(0);
         
+        horizon.draw(camera.getCamPos(), true, true);
     }
     else if (scene == 2)
     {
