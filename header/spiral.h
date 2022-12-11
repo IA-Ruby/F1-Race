@@ -9,17 +9,18 @@
 
 class Spiral
 {
-    private:
-        GLubyte colorRoad[3];
-        GLubyte colorBG[3];
-        deque<float> cordY;
-        float auxRot = 0;
-        void updSpiral(float speed);
-        void drawMode(int mode, GLubyte color[3]);    
+private:
+    GLubyte colorRoad[3];
+    GLubyte colorBG[3];
+    deque<float> cordY;
+    float auxRot = 0;
+    Textures *textures;
+    void updSpiral(float speed);
+    void drawMode(int mode, GLubyte color[3]);
 
-    public:
-        Spiral(GLubyte colorRoad[3], GLubyte colorBG[3]);        
-        void draw(float speed);
+public:
+    Spiral(GLubyte colorRoad[3], GLubyte colorBG[3], Textures *textures);
+    void draw(float speed);
 };
 
 #endif
